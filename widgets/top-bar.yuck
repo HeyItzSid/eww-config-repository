@@ -34,7 +34,6 @@
   (box :class "top-bar"
        :orientation "h"
        :space-evenly false
-    (quick-settings-trigger)
     (box :class "spacer" :width 20)
     (telemetry-hud)
     (box :class "spacer" :hexpand true)

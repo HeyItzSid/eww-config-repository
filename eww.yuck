@@ -18,7 +18,7 @@
   :exclusive true
   :focusable false
   :windowtype "dock"
-  :reserve (struts :top "45px")
+  :reserve (struts :distance "45px" :side "top")
   (top-bar))
 
 ;; ===== BOTTOM BAR WINDOW =====
@@ -34,5 +34,5 @@
   :exclusive true
   :focusable false
   :windowtype "dock"
-  :reserve (struts :bottom "70px")
+  :reserve (struts :distance "70px" :side "bottom")
   (bottom-bar))

@@ -9,8 +9,6 @@
 
 ;; ===== POLLING VARIABLES =====
 
-(defpoll search_results :interval "500ms" 
-  "scripts/apps.sh search '${search_query}'")
 (defpoll running_apps :interval "2s" 
   "scripts/apps.sh running")
 (defpoll active_window :interval "1s" "scripts/windows.sh active")
@@ -41,15 +39,7 @@
     (box :class "search-results ${search_focused && search_query != '' ? 'visible' : 'hidden'}"
          :orientation "v"
          :spacing 5
-      (for result in {search_results != '' ? strsplit(search_results, '\n') : []}
-        (button :class "search-result-item"
-                :onclick "scripts/apps.sh launch '${result}' && eww update search_focused=false search_query=''"
-          (box :orientation "h"
-               :spacing 10
-            (label :class "result-icon" :text "📱")
-            (label :class "result-name"
-                   :text "${result}"
-                   :limit-width 30)))))
+      (label :class "search-placeholder" :text "Type to search apps..."))
     
     ;; Search input
     (box :class "search-input-container"
@@ -60,7 +50,7 @@
              :value search_query
              :onchange "eww update search_query='{}'"
              :onfocus "eww update search_focused=true"
-             :onblur "eww update search_focused=false"))))
+             :onblur "eww update search_focused=false"))
 
 ;; ===== APP DOCK SUB-WIDGET =====
 

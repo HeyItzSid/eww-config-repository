@@ -26,7 +26,7 @@
                       :height "35px"
                       :anchor "top left")
   :stacking "fg"
-  :exclusive true
+  :exclusive false
   :windowtype "dock"
   (box :class "island left-island"
        :orientation "h"
@@ -90,7 +90,7 @@
                       :height "35px"
                       :anchor "top right")
   :stacking "fg"
-  :exclusive true
+  :exclusive false
   :windowtype "dock"
   (box :class "island right-island"
        :orientation "h"

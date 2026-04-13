@@ -4,6 +4,9 @@
 
 (defpoll cpu_usage :interval "2s" "top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1")
 (defpoll ram_usage :interval "2s" "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2}'")
+(defpoll cpu_temp  :interval "2s" "sensors 2>/dev/null | grep 'Core 0' | awk '{print $3}' | tr -d '+°C' | head -1 || echo 'N/A'")
+(defpoll net_down  :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $2/1024/1024}'")
+(defpoll volume    :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
 
 ;; ===== TOP BAR =====
 
@@ -23,10 +26,12 @@
     ;; Left - System monitoring
     (box :class "left-section"
          :halign "start"
-         :spacing 20
-      (label :text "🖥️ Desktop")
+         :spacing 15
       (label :text "CPU: ${cpu_usage}%")
-      (label :text "RAM: ${ram_usage}%"))
+      (label :text "RAM: ${ram_usage}%")
+      (label :text "🌡 ${cpu_temp}")
+      (label :text "↓ ${net_down}MB/s")
+      (label :text "🔊 ${volume}%"))
     
     ;; Center - Clock
     (box :class "center-section"

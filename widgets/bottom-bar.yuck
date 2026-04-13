@@ -17,7 +17,7 @@
 
 ;; ===== DOCK APP SHORTCUTS =====
 
-(defvar dock_apps '["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
+(defvar dock_apps ["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
 
 ;; ===== MAIN BOTTOM BAR WIDGET =====
 

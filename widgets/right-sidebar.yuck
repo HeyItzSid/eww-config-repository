@@ -12,8 +12,8 @@
 
 ;; ===== APP SHORTCUTS DATA =====
 
-(defvar app_shortcuts_page1 '["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
-(defvar app_shortcuts_page2 '["gimp" "vlc" "steam" "obs"])
+(defvar app_shortcuts_page1 ["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
+(defvar app_shortcuts_page2 ["gimp" "vlc" "steam" "obs"])
 
 ;; ===== MAIN RIGHT SIDEBAR WIDGET =====
 

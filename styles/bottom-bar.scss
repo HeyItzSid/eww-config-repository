@@ -101,7 +101,6 @@
   background: transparent;
   padding: 8px;
   border-radius: $border-radius;
-  position: relative;
   @include transition-transform;
   
   // Hover magnification effect (200ms)

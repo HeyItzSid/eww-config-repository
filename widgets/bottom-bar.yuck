@@ -1,0 +1,88 @@
+;; Bottom Bar Widget Module
+;; Search bar and app dock
+
+;; ===== STATE VARIABLES =====
+
+(defvar search_focused false)
+(defvar search_query "")
+(defvar hovered_app "")
+
+;; ===== POLLING VARIABLES =====
+
+(defpoll search_results :interval "500ms" 
+  "scripts/apps.sh search '${search_query}'")
+(defpoll running_apps :interval "2s" 
+  "scripts/apps.sh running")
+(defpoll active_window :interval "1s" "scripts/windows.sh active")
+
+;; ===== DOCK APP SHORTCUTS =====
+
+(defvar dock_apps [
+  "brave-browser|Brave|/usr/share/icons/hicolor/48x48/apps/brave-browser.png"
+  "kiro|Kiro|/usr/share/icons/hicolor/48x48/apps/kiro.png"
+  "discord|Discord|/usr/share/icons/hicolor/48x48/apps/discord.png"
+  "code|VS Code|/usr/share/icons/hicolor/48x48/apps/code.png"
+  "kitty|Terminal|/usr/share/icons/hicolor/48x48/apps/kitty.png"
+  "thunar|Files|/usr/share/icons/hicolor/48x48/apps/thunar.png"
+])
+
+;; ===== MAIN BOTTOM BAR WIDGET =====
+
+(defwidget bottom-bar []
+  (box :class "bottom-bar"
+       :orientation "h"
+       :space-evenly false
+    (box :class "spacer" :hexpand true)
+    (search-bar)
+    (box :class "spacer" :hexpand true)
+    (app-dock)))
+
+;; ===== SEARCH BAR SUB-WIDGET =====
+
+(defwidget search-bar []
+  (box :class "search-container island ${search_focused ? 'focused' : ''}"
+       :orientation "v"
+       :space-evenly false
+    
+    ;; Search results drawer (expands upward when focused)
+    (box :class "search-results ${search_focused && search_query != '' ? 'visible' : 'hidden'}"
+         :orientation "v"
+         :spacing 5
+      (for result in {search_results != '' ? strsplit(search_results, '\n') : []}
+        (button :class "search-result-item"
+                :onclick "scripts/apps.sh launch '${result}' && eww update search_focused=false search_query=''"
+          (box :orientation "h"
+               :spacing 10
+            (label :class "result-icon" :text "📱")
+            (label :class "result-name"
+                   :text "${result}"
+                   :limit-width 30)))))
+    
+    ;; Search input
+    (box :class "search-input-container"
+         :orientation "h"
+         :spacing 8
+      (label :class "search-icon" :text "🔍")
+      (input :class "search-input"
+             :value search_query
+             :onchange "eww update search_query='{}'"
+             :onfocus "eww update search_focused=true"
+             :onblur "eww update search_focused=false"))))
+
+;; ===== APP DOCK SUB-WIDGET =====
+
+(defwidget app-dock []
+  (box :class "app-dock"
+       :orientation "h"
+       :spacing 12
+    (for app in dock_apps
+      (eventbox :onhover "eww update hovered_app='${strsplit(app, '|')[0]}'"
+                :onhoverlost "eww update hovered_app=''"
+        (button :class "dock-app ${hovered_app == strsplit(app, '|')[0] ? 'hovered' : ''} ${running_apps =~ strsplit(app, '|')[0] ? 'running' : ''}"
+                :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+          (box :orientation "v"
+               :spacing 4
+            (label :class "dock-icon" :text "📱")
+            ;; Running indicator dot
+            (label :class "running-indicator ${running_apps =~ strsplit(app, '|')[0] ? 'visible' : 'hidden'}"
+                   :text "●")))))))

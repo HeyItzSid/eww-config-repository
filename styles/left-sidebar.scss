@@ -1,0 +1,92 @@
+// Left Sidebar Styles
+// Window selector - Always expanded when visible
+
+// ===== SIDEBAR CONTAINER =====
+
+.left-sidebar {
+  background: $bg-primary;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 350px;
+  max-width: 350px;
+  
+  // Always show all content when visible
+  .window-list,
+  .sidebar-footer {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .window-icon,
+  .window-title,
+  .logout-text {
+    display: block;
+  }
+}
+
+// ===== WINDOW LIST =====
+
+.window-list {
+  padding: 10px 5px;
+}
+
+.window-item {
+  @include button-base;
+  padding: 8px;
+  border-radius: $border-radius-small;
+  @include transition-fast;
+  
+  &:hover {
+    background: $bg-secondary;
+  }
+  
+  &.active {
+    background: rgba(0, 255, 255, 0.2);
+    border-left: 3px solid $accent-cyan;
+    
+    .window-title {
+      color: $accent-cyan;
+      font-weight: bold;
+    }
+  }
+  
+  .window-icon {
+    font-size: 20px;
+    color: $text-secondary;
+    min-width: 32px;
+    text-align: center;
+    @include transition-opacity;
+  }
+  
+  .window-title {
+    color: $text-primary;
+    font-size: 12px;
+    @include transition-opacity;
+  }
+}
+
+// ===== SIDEBAR FOOTER =====
+
+.sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  @include button-base;
+  background: rgba(255, 68, 51, 0.2);
+  color: $accent-vermillion;
+  padding: 10px;
+  border-radius: $border-radius-small;
+  width: 100%;
+  @include transition-fast;
+  
+  &:hover {
+    background: rgba(255, 68, 51, 0.4);
+    color: lighten($accent-vermillion, 10%);
+    @include hover-glow($accent-vermillion);
+  }
+  
+  .logout-text {
+    font-weight: bold;
+  }
+}

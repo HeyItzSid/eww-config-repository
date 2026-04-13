@@ -1,0 +1,222 @@
+// Main EWW Stylesheet
+// Global styles and imports - Invisible Hover Zones with Edge Preview
+
+// ===== GLOBAL VARIABLES =====
+
+// Graphite black theme
+$bg-primary: rgba(18, 18, 18, 0.98);
+$bg-secondary: rgba(28, 28, 28, 0.95);
+$bg-tertiary: rgba(38, 38, 38, 0.92);
+
+// Cyan-neon blue accent (middle between cyan #00ffff and neon blue #0080ff)
+$accent-cyan: #00bfff;
+$accent-blue: #0099ff;
+$accent-purple: #8800ff;
+
+// Vermillion and neon green accents
+$accent-vermillion: #ff4433;
+$accent-green: #00ff88;
+
+$temp-cyan: #00bfff;
+$temp-yellow: #ffff00;
+$temp-orange: #ff8800;
+$temp-red: $accent-vermillion;
+
+// Text in cyan-neon blue
+$text-primary: #00bfff;
+$text-secondary: #0099cc;
+$text-muted: #006688;
+
+$border-radius: 12px;
+$border-radius-small: 8px;
+$border-radius-large: 16px;
+
+$transition-fast: 200ms;
+$transition-normal: 300ms;
+$transition-slow: 500ms;
+
+// ===== GLOBAL STYLES =====
+
+* {
+  all: unset;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
+}
+
+.desktop-container {
+  background: transparent;
+}
+
+.middle-section {
+  background: transparent;
+}
+
+.workspace-area {
+  background: transparent;
+}
+
+.spacer {
+  background: transparent;
+}
+
+// ===== INVISIBLE HOVER ZONES =====
+
+.hover-zone {
+  background: transparent;
+  position: relative;
+  
+  &.top-zone {
+    min-height: 15px;
+    width: 100%;
+  }
+  
+  &.bottom-zone {
+    min-height: 15px;
+    width: 100%;
+  }
+  
+  &.left-zone {
+    min-width: 15px;
+    height: 100%;
+  }
+  
+  &.right-zone {
+    min-width: 15px;
+    height: 100%;
+  }
+}
+
+// ===== EDGE PREVIEW INDICATORS =====
+
+.top-edge-preview,
+.bottom-edge-preview,
+.left-edge-preview,
+.right-edge-preview {
+  position: absolute;
+  background: linear-gradient(45deg, $accent-cyan, $accent-blue);
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+  box-shadow: 0 0 20px $accent-cyan;
+  z-index: 999;
+  
+  &.active {
+    opacity: 0.9;
+    animation: edge-reveal 200ms ease-in-out;
+  }
+}
+
+.top-edge-preview {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(180deg, $accent-cyan, transparent);
+}
+
+.bottom-edge-preview {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(0deg, $accent-cyan, transparent);
+}
+
+.left-edge-preview {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, $accent-cyan, transparent);
+}
+
+.right-edge-preview {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 4px;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(270deg, $accent-cyan, transparent);
+}
+
+@keyframes edge-reveal {
+  0% { 
+    opacity: 0;
+    transform: scale(0.5);
+    box-shadow: 0 0 5px $accent-cyan;
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 30px $accent-cyan;
+  }
+  100% { 
+    opacity: 0.9;
+    transform: scale(1);
+    box-shadow: 0 0 20px $accent-cyan;
+  }
+}
+
+// ===== UI CONTAINER VISIBILITY WITH STAGGERED ANIMATION =====
+
+.top-bar-container,
+.bottom-bar-container,
+.left-sidebar-container,
+.right-sidebar-container {
+  transition: opacity 400ms ease-out 200ms,
+              transform 400ms ease-out 200ms;
+  
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(0, 0);
+  }
+}
+
+.top-bar-container {
+  &.hidden {
+    transform: translateY(-100%);
+  }
+}
+
+.bottom-bar-container {
+  &.hidden {
+    transform: translateY(100%);
+  }
+}
+
+.left-sidebar-container {
+  &.hidden {
+    transform: translateX(-100%);
+  }
+}
+
+.right-sidebar-container {
+  &.hidden {
+    transform: translateX(100%);
+  }
+}
+
+// Island-style floating components
+.island {
+  background: $bg-secondary;
+  border-radius: $border-radius;
+  padding: 8px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+// ===== IMPORT COMPONENT STYLES =====
+
+@import "styles/animations.scss";
+@import "styles/top-bar.scss";
+@import "styles/left-sidebar.scss";
+@import "styles/right-sidebar.scss";
+@import "styles/bottom-bar.scss";
+@import "styles/quick-settings.scss";

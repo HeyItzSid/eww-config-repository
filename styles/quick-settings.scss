@@ -1,0 +1,251 @@
+// Quick Settings Panel Styles
+// Dropdown panel with network, brightness, and system toggles
+
+// ===== TRIGGER BUTTON =====
+
+.quick-settings-trigger {
+  background: $bg-secondary;
+  color: $text-primary;
+  padding: 8px 16px;
+  border-radius: $border-radius;
+  @include transition-fast;
+  @include hover-glow($accent-cyan);
+  
+  &:hover {
+    background: $bg-tertiary;
+    transform: scale(1.05);
+  }
+}
+
+// ===== PANEL CONTAINER =====
+
+.quick-settings-panel {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  background: $bg-secondary;
+  border-radius: $border-radius-large;
+  padding: 20px;
+  min-width: 400px;
+  max-width: 450px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  @include transition-opacity;
+  
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+  }
+  
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+}
+
+// ===== HEADER =====
+
+.qs-header {
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+  
+  .qs-title {
+    color: $text-primary;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .qs-close-btn {
+    background: transparent;
+    color: $text-muted;
+    padding: 4px 8px;
+    border-radius: $border-radius-small;
+    @include transition-fast;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
+    }
+  }
+}
+
+// ===== SECTIONS =====
+
+.qs-section {
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .qs-section-title {
+    color: $text-muted;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+}
+
+// ===== TOGGLE ITEMS =====
+
+.qs-toggle-item {
+  background: $bg-tertiary;
+  padding: 12px;
+  border-radius: $border-radius;
+  margin-bottom: 8px;
+  @include transition-fast;
+  
+  &:hover {
+    background: lighten($bg-tertiary, 5%);
+  }
+  
+  &.active {
+    background: rgba(0, 191, 255, 0.15);
+    border-left: 3px solid $accent-cyan;
+    
+    .qs-toggle-label {
+      color: $accent-cyan;
+    }
+  }
+  
+  .qs-toggle-btn {
+    background: transparent;
+    font-size: 20px;
+    padding: 4px;
+    @include transition-fast;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  .qs-icon {
+    font-size: 20px;
+    min-width: 30px;
+  }
+  
+  .qs-toggle-label {
+    color: $text-primary;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .qs-toggle-status {
+    color: $text-muted;
+    font-size: 11px;
+  }
+  
+  .qs-settings-btn {
+    background: transparent;
+    color: $text-muted;
+    padding: 4px 8px;
+    border-radius: $border-radius-small;
+    @include transition-fast;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
+    }
+  }
+}
+
+// ===== BRIGHTNESS SLIDER =====
+
+.qs-slider-item {
+  background: $bg-tertiary;
+  padding: 12px;
+  border-radius: $border-radius;
+  
+  .brightness-slider-container {
+    justify-content: center;
+  }
+  
+  .brightness-slider {
+    trough {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      min-height: 4px;
+    }
+    
+    highlight {
+      background: $accent-cyan;
+      border-radius: 4px;
+      min-height: 4px;
+    }
+    
+    slider {
+      background: $text-primary;
+      border-radius: 50%;
+      min-width: 12px;
+      min-height: 12px;
+      margin: -4px 0;
+      box-shadow: 0 0 8px $accent-cyan;
+      @include transition-fast;
+    }
+    
+    &:hover slider {
+      background: $accent-cyan;
+      box-shadow: 0 0 12px $accent-cyan;
+      transform: scale(1.2);
+    }
+  }
+  
+  .brightness-value {
+    color: $text-muted;
+    font-size: 10px;
+    text-align: center;
+    margin-top: 4px;
+  }
+}
+
+// ===== TOGGLE GRID =====
+
+.qs-toggle-grid {
+  .qs-grid-toggle {
+    background: $bg-tertiary;
+    padding: 16px 12px;
+    border-radius: $border-radius;
+    flex: 1;
+    @include transition-fast;
+    @include hover-glow($accent-cyan);
+    
+    &:hover {
+      background: lighten($bg-tertiary, 5%);
+      transform: translateY(-2px);
+    }
+    
+    &.active {
+      background: rgba(0, 191, 255, 0.2);
+      border: 2px solid $accent-cyan;
+      
+      .qs-grid-icon {
+        color: $accent-cyan;
+      }
+      
+      .qs-grid-label {
+        color: $accent-cyan;
+      }
+    }
+    
+    &.placeholder {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .qs-grid-icon {
+      font-size: 24px;
+      color: $text-primary;
+    }
+    
+    .qs-grid-label {
+      color: $text-secondary;
+      font-size: 11px;
+      text-align: center;
+    }
+  }
+}

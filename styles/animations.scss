@@ -1,0 +1,94 @@
+// Animation Definitions
+// Reusable transitions and easing functions
+
+// ===== EASING FUNCTIONS =====
+
+$ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+$ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1.000);
+$ease-out-back: cubic-bezier(0.175, 0.885, 0.320, 1.275);
+
+// ===== TRANSITION MIXINS =====
+
+@mixin transition-fast {
+  transition: all $transition-fast $ease-out-cubic;
+}
+
+@mixin transition-normal {
+  transition: all $transition-normal $ease-out-cubic;
+}
+
+@mixin transition-slow {
+  transition: all $transition-slow $ease-in-out-cubic;
+}
+
+@mixin transition-transform {
+  transition: transform $transition-fast $ease-out-cubic;
+  will-change: transform;
+}
+
+@mixin transition-width {
+  transition: width $transition-normal $ease-in-out-cubic,
+              min-width $transition-normal $ease-in-out-cubic,
+              max-width $transition-normal $ease-in-out-cubic;
+  will-change: width;
+}
+
+@mixin transition-height {
+  transition: height $transition-normal $ease-in-out-cubic,
+              min-height $transition-normal $ease-in-out-cubic,
+              max-height $transition-normal $ease-in-out-cubic;
+  will-change: height;
+}
+
+@mixin transition-opacity {
+  transition: opacity $transition-normal $ease-out-cubic;
+  will-change: opacity;
+}
+
+// ===== HOVER EFFECTS =====
+
+@mixin hover-scale($scale: 1.1) {
+  @include transition-transform;
+  
+  &:hover {
+    transform: scale($scale);
+  }
+}
+
+@mixin hover-glow($color: $accent-cyan) {
+  @include transition-fast;
+  
+  &:hover {
+    box-shadow: 0 0 12px $color;
+  }
+}
+
+// ===== BUTTON BASE MIXIN =====
+
+@mixin button-base {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include transition-fast;
+}
+
+// ===== VISIBILITY ANIMATIONS =====
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  @include transition-opacity;
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: all;
+  max-height: 1000px;
+  @include transition-opacity;
+}

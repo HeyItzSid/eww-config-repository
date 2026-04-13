@@ -1,0 +1,160 @@
+;; Quick Settings Widget Module
+;; Dropdown panel with network, brightness, and system toggles
+
+;; ===== STATE VARIABLES =====
+
+(defvar quick_settings_open false)
+
+;; ===== POLLING VARIABLES =====
+
+;; Network status
+(defpoll wifi_status :interval "2s" "scripts/network.sh wifi_status")
+(defpoll wifi_ssid :interval "2s" "scripts/network.sh wifi_ssid")
+(defpoll wifi_strength :interval "2s" "scripts/network.sh wifi_strength")
+(defpoll ethernet_status :interval "2s" "scripts/network.sh ethernet_status")
+
+;; System settings
+(defpoll brightness :interval "1s" "scripts/system.sh brightness")
+(defpoll airplane_mode :interval "2s" "scripts/system.sh airplane_mode")
+(defpoll hotspot_status :interval "2s" "scripts/system.sh hotspot_status")
+
+;; ===== MAIN QUICK SETTINGS WIDGET =====
+
+(defwidget quick-settings-trigger []
+  (button :class "quick-settings-trigger"
+          :onclick "eww update quick_settings_open=${!quick_settings_open}"
+    (box :orientation "h"
+         :spacing 8
+      (label :text "⚙")
+      (label :text "Quick Settings"))))
+
+(defwidget quick-settings-panel []
+  (box :class "quick-settings-panel ${quick_settings_open ? 'visible' : 'hidden'}"
+       :orientation "v"
+       :space-evenly false
+    
+    ;; Header
+    (box :class "qs-header"
+         :orientation "h"
+      (label :class "qs-title" :text "Quick Settings")
+      (box :hexpand true)
+      (button :class "qs-close-btn"
+              :onclick "eww update quick_settings_open=false"
+        (label :text "✕")))
+    
+    ;; Network Section
+    (box :class "qs-section network-section"
+         :orientation "v"
+         :spacing 10
+      (label :class "qs-section-title" :text "Network")
+      
+      ;; WiFi toggle
+      (box :class "qs-toggle-item ${wifi_status == 'connected' ? 'active' : ''}"
+           :orientation "h"
+           :spacing 10
+        (button :class "qs-toggle-btn"
+                :onclick "scripts/network.sh wifi_toggle"
+          (label :text "📶"))
+        (box :orientation "v"
+             :spacing 2
+             :hexpand true
+          (label :class "qs-toggle-label" :text "WiFi")
+          (label :class "qs-toggle-status" 
+                 :text "${wifi_status == 'connected' ? wifi_ssid : 'Disconnected'}"))
+        (button :class "qs-settings-btn"
+                :onclick "nm-connection-editor &"
+          (label :text "⚙")))
+      
+      ;; Ethernet status
+      (box :class "qs-toggle-item ${ethernet_status == 'connected' ? 'active' : ''}"
+           :orientation "h"
+           :spacing 10
+        (label :class "qs-icon" :text "🔌")
+        (box :orientation "v"
+             :spacing 2
+             :hexpand true
+          (label :class "qs-toggle-label" :text "Ethernet")
+          (label :class "qs-toggle-status" 
+                 :text "${ethernet_status == 'connected' ? 'Connected' : 'Disconnected'}"))))
+    
+    ;; Brightness Section
+    (box :class "qs-section brightness-section"
+         :orientation "v"
+         :spacing 10
+      (label :class "qs-section-title" :text "Brightness")
+      
+      (box :class "qs-slider-item"
+           :orientation "h"
+           :spacing 10
+        (label :class "qs-icon" :text "☀")
+        (box :class "brightness-slider-container"
+             :orientation "v"
+             :spacing 2
+             :hexpand true
+          (scale :class "brightness-slider"
+                 :value brightness
+                 :min 0
+                 :max 100
+                 :onchange "scripts/system.sh set_brightness {}")
+          (label :class "brightness-value" :text "${brightness}%"))))
+    
+    ;; System Toggles Section
+    (box :class "qs-section toggles-section"
+         :orientation "v"
+         :spacing 10
+      (label :class "qs-section-title" :text "System")
+      
+      ;; Toggle grid (2x3)
+      (box :class "qs-toggle-grid"
+           :orientation "v"
+           :spacing 8
+        
+        ;; Row 1
+        (box :orientation "h"
+             :spacing 8
+          ;; Airplane mode
+          (button :class "qs-grid-toggle ${airplane_mode == 'on' ? 'active' : ''}"
+                  :onclick "scripts/system.sh airplane_toggle"
+            (box :orientation "v"
+                 :spacing 4
+              (label :class "qs-grid-icon" :text "✈")
+              (label :class "qs-grid-label" :text "Airplane")))
+          
+          ;; Mobile hotspot
+          (button :class "qs-grid-toggle ${hotspot_status == 'on' ? 'active' : ''}"
+                  :onclick "scripts/system.sh hotspot_toggle"
+            (box :orientation "v"
+                 :spacing 4
+              (label :class "qs-grid-icon" :text "📡")
+              (label :class "qs-grid-label" :text "Hotspot")))
+          
+          ;; Live captions
+          (button :class "qs-grid-toggle"
+                  :onclick "scripts/system.sh captions_toggle"
+            (box :orientation "v"
+                 :spacing 4
+              (label :class "qs-grid-icon" :text "💬")
+              (label :class "qs-grid-label" :text "Captions"))))
+        
+        ;; Row 2
+        (box :orientation "h"
+             :spacing 8
+          ;; Cast/Projection
+          (button :class "qs-grid-toggle"
+                  :onclick "scripts/system.sh cast_open"
+            (box :orientation "v"
+                 :spacing 4
+              (label :class "qs-grid-icon" :text "📺")
+              (label :class "qs-grid-label" :text "Cast")))
+          
+          ;; Settings
+          (button :class "qs-grid-toggle"
+                  :onclick "gnome-control-center &"
+            (box :orientation "v"
+                 :spacing 4
+              (label :class "qs-grid-icon" :text "⚙")
+              (label :class "qs-grid-label" :text "Settings")))
+          
+          ;; Placeholder for alignment
+          (box :class "qs-grid-toggle placeholder"
+               :hexpand true))))))

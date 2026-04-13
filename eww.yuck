@@ -1,0 +1,71 @@
+;; Main EWW Configuration File
+;; Custom Desktop UI - Invisible Hover Zones with Edge Preview
+
+;; Include widget modules
+(include "./widgets/top-bar.yuck")
+(include "./widgets/left-sidebar.yuck")
+(include "./widgets/right-sidebar.yuck")
+(include "./widgets/bottom-bar.yuck")
+(include "./widgets/quick-settings.yuck")
+
+;; Global state for UI visibility and edge preview
+(defvar ui_visible false)
+(defvar top_edge_hovered false)
+(defvar bottom_edge_hovered false)
+(defvar left_edge_hovered false)
+(defvar right_edge_hovered false)
+
+;; Main window definition
+(defwindow main-desktop
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "100%"
+                      :anchor "center")
+  :stacking "fg"
+  :exclusive false
+  :focusable false
+  (box :class "desktop-container"
+       :orientation "v"
+    ;; Top hover zone with edge preview
+    (eventbox :class "hover-zone top-zone"
+              :onhover "eww update top_edge_hovered=true && eww update ui_visible=true"
+              :onhoverlost "eww update top_edge_hovered=false && eww update ui_visible=false"
+      (box :class "top-edge-preview ${top_edge_hovered ? 'active' : ''}")
+      (box :class "top-bar-container ${ui_visible ? 'visible' : 'hidden'}"
+        (top-bar)))
+    
+    ;; Middle section with side hover zones
+    (box :class "middle-section"
+         :orientation "h"
+         :vexpand true
+      ;; Left hover zone with edge preview
+      (eventbox :class "hover-zone left-zone"
+                :onhover "eww update left_edge_hovered=true && eww update ui_visible=true"
+                :onhoverlost "eww update left_edge_hovered=false && eww update ui_visible=false"
+        (box :class "left-edge-preview ${left_edge_hovered ? 'active' : ''}")
+        (box :class "left-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
+          (left-sidebar)))
+      
+      ;; Workspace area (transparent)
+      (box :class "workspace-area" :hexpand true)
+      
+      ;; Right hover zone with edge preview
+      (eventbox :class "hover-zone right-zone"
+                :onhover "eww update right_edge_hovered=true && eww update ui_visible=true"
+                :onhoverlost "eww update right_edge_hovered=false && eww update ui_visible=false"
+        (box :class "right-edge-preview ${right_edge_hovered ? 'active' : ''}")
+        (box :class "right-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
+          (right-sidebar))))
+    
+    ;; Bottom hover zone with edge preview
+    (eventbox :class "hover-zone bottom-zone"
+              :onhover "eww update bottom_edge_hovered=true && eww update ui_visible=true"
+              :onhoverlost "eww update bottom_edge_hovered=false && eww update ui_visible=false"
+      (box :class "bottom-edge-preview ${bottom_edge_hovered ? 'active' : ''}")
+      (box :class "bottom-bar-container ${ui_visible ? 'visible' : 'hidden'}"
+        (bottom-bar)))
+    
+    ;; Quick settings panel (overlay)
+    (quick-settings-panel)))

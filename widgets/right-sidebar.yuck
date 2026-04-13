@@ -1,0 +1,87 @@
+;; Right Sidebar Widget Module
+;; Clock and app shortcuts - Always expanded when visible
+
+;; ===== STATE VARIABLES =====
+
+(defvar app_page 0)  ; Current page of app shortcuts
+
+;; ===== POLLING VARIABLES =====
+
+(defpoll time :interval "1s" "date '+%H:%M'")
+(defpoll date :interval "60s" "date '+%A, %B %d'")
+
+;; ===== APP SHORTCUTS DATA =====
+
+(defvar app_shortcuts_page1 [
+  "brave-browser|Brave|/usr/share/icons/hicolor/48x48/apps/brave-browser.png"
+  "kiro|Kiro|/usr/share/icons/hicolor/48x48/apps/kiro.png"
+  "discord|Discord|/usr/share/icons/hicolor/48x48/apps/discord.png"
+  "code|VS Code|/usr/share/icons/hicolor/48x48/apps/code.png"
+  "kitty|Terminal|/usr/share/icons/hicolor/48x48/apps/kitty.png"
+  "thunar|Files|/usr/share/icons/hicolor/48x48/apps/thunar.png"
+])
+
+(defvar app_shortcuts_page2 [
+  "gimp|GIMP|/usr/share/icons/hicolor/48x48/apps/gimp.png"
+  "vlc|VLC|/usr/share/icons/hicolor/48x48/apps/vlc.png"
+  "steam|Steam|/usr/share/icons/hicolor/48x48/apps/steam.png"
+  "obs|OBS Studio|/usr/share/icons/hicolor/48x48/apps/obs.png"
+])
+
+;; ===== MAIN RIGHT SIDEBAR WIDGET =====
+
+(defwidget right-sidebar []
+  (box :class "right-sidebar expanded"
+       :orientation "v"
+       :space-evenly false
+    
+    ;; Clock display
+    (box :class "clock-display"
+         :orientation "v"
+         :spacing 5
+      (label :class "time-display" :text time)
+      (label :class "date-display" :text date))
+    
+    ;; App shortcuts grid
+    (box :class "app-shortcuts"
+         :orientation "v"
+         :spacing 15
+         :vexpand true
+      
+      ;; Page 1 apps
+      (box :class "app-grid ${app_page == 0 ? 'visible' : 'hidden'}"
+           :orientation "v"
+           :spacing 10
+        (for app in app_shortcuts_page1
+          (button :class "app-shortcut"
+                  :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+            (box :orientation "h"
+                 :spacing 10
+              (label :class "app-icon" :text "📱")
+              (label :class "app-name" 
+                     :text "${strsplit(app, '|')[1]}")))))
+      
+      ;; Page 2 apps
+      (box :class "app-grid ${app_page == 1 ? 'visible' : 'hidden'}"
+           :orientation "v"
+           :spacing 10
+        (for app in app_shortcuts_page2
+          (button :class "app-shortcut"
+                  :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+            (box :orientation "h"
+                 :spacing 10
+              (label :class "app-icon" :text "📱")
+              (label :class "app-name" 
+                     :text "${strsplit(app, '|')[1]}")))))
+      
+      ;; Page navigation
+      (box :class "page-navigation"
+           :orientation "h"
+           :spacing 10
+           :halign "center"
+        (button :class "page-btn"
+                :onclick "eww update app_page=0"
+          (label :text "${app_page == 0 ? '●' : '○'}"))
+        (button :class "page-btn"
+                :onclick "eww update app_page=1"
+          (label :text "${app_page == 1 ? '●' : '○'}"))))))

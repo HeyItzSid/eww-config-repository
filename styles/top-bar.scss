@@ -1,0 +1,222 @@
+// Top Bar Styles
+// Telemetry HUD, Workspace Switcher, Media Controls
+
+// ===== TOP BAR CONTAINER =====
+
+.top-bar {
+  background: $bg-primary;
+  padding: 8px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// ===== TELEMETRY HUD =====
+
+.telemetry-hud {
+  padding: 4px 0;
+}
+
+.telemetry-section {
+  padding: 4px 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.metric {
+  min-width: 60px;
+  
+  .metric-label {
+    color: $text-muted;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .metric-value {
+    color: $text-primary;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  
+  // Specific metric colors
+  &.cpu .metric-value { color: $accent-cyan; }
+  &.gpu .metric-value { color: $accent-green; }
+  &.ram .metric-value { color: #ff00ff; }
+  &.vram .metric-value { color: #ff0088; }
+  &.fps .metric-value { color: $accent-green; }
+  &.fan .metric-value { color: #88ccff; }
+  &.net-down .metric-value { color: $accent-green; }
+  &.net-up .metric-value { color: $accent-vermillion; }
+}
+
+// Temperature color coding
+.temp {
+  &.temp-cyan .metric-value { color: $temp-cyan; }
+  &.temp-yellow .metric-value { color: $temp-yellow; }
+  &.temp-orange .metric-value { color: $temp-orange; }
+  &.temp-red .metric-value { 
+    color: $temp-red;
+    animation: pulse 1s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+// Fan safety warning
+.fan-warning {
+  background: $temp-red;
+  color: #000000;
+  padding: 6px 12px;
+  border-radius: $border-radius-small;
+  font-weight: bold;
+  margin-left: 15px;
+  animation: blink 1s infinite;
+  @include transition-opacity;
+  
+  &.hidden {
+    opacity: 0;
+    max-width: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  &.active {
+    opacity: 1;
+    max-width: 200px;
+  }
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.3; }
+}
+
+// ===== WORKSPACE SWITCHER =====
+
+.workspace-switcher {
+  padding: 6px 12px;
+  
+  .workspace-indicator {
+    background: transparent;
+    color: $text-muted;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-size: 16px;
+    @include transition-fast;
+    @include hover-scale(1.2);
+    
+    &.active {
+      color: $accent-cyan;
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 8px $accent-cyan;
+    }
+    
+    &:hover:not(.active) {
+      color: $text-primary;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// ===== MEDIA CONTROLS =====
+
+.media-controls {
+  padding: 4px 0;
+}
+
+.media-info {
+  min-width: 200px;
+  
+  .media-title {
+    color: $text-primary;
+    font-size: 12px;
+  }
+}
+
+.playback-controls {
+  .media-btn {
+    background: $bg-secondary;
+    color: $text-primary;
+    padding: 6px 12px;
+    border-radius: $border-radius-small;
+    font-size: 16px;
+    @include transition-fast;
+    @include hover-glow($accent-cyan);
+    
+    &:hover {
+      background: $bg-tertiary;
+      transform: scale(1.1);
+    }
+    
+    &.play-pause {
+      background: $accent-cyan;
+      color: #000000;
+      
+      &:hover {
+        background: lighten($accent-cyan, 10%);
+      }
+    }
+  }
+}
+
+.volume-controls {
+  .volume-btn, .mixer-btn {
+    background: transparent;
+    color: $text-secondary;
+    padding: 4px 8px;
+    border-radius: $border-radius-small;
+    @include transition-fast;
+    
+    &:hover {
+      color: $text-primary;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  .volume-bar-container {
+    justify-content: center;
+  }
+
+  .volume-bar {
+    // EWW scale widget styling
+    trough {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      min-height: 4px;
+    }
+
+    highlight {
+      background: $accent-cyan;
+      border-radius: 4px;
+      min-height: 4px;
+    }
+
+    slider {
+      background: $text-primary;
+      border-radius: 50%;
+      min-width: 10px;
+      min-height: 10px;
+      margin: -3px 0;
+      box-shadow: 0 0 6px $accent-cyan;
+      @include transition-fast;
+    }
+
+    &:hover slider {
+      background: $accent-cyan;
+      box-shadow: 0 0 10px $accent-cyan;
+      transform: scale(1.2);
+    }
+  }
+
+  .volume-value {
+    color: $text-muted;
+    font-size: 10px;
+    text-align: center;
+    min-width: 40px;
+  }
+}

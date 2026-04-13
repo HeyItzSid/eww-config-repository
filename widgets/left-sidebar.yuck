@@ -1,0 +1,40 @@
+;; Left Sidebar Widget Module
+;; Window Selector - Always expanded when visible
+
+;; ===== POLLING VARIABLES =====
+
+(defpoll window_list :interval "2s" "scripts/windows.sh list")
+(defpoll active_window :interval "1s" "scripts/windows.sh active")
+
+;; ===== MAIN LEFT SIDEBAR WIDGET =====
+
+(defwidget left-sidebar []
+  (box :class "left-sidebar expanded"
+       :orientation "v"
+       :space-evenly false
+    
+    ;; Window list
+    (box :class "window-list"
+         :orientation "v"
+         :spacing 8
+         :vexpand true
+      (for window in {window_list != '' ? strsplit(window_list, '\n') : []}
+        (button :class "window-item ${window =~ active_window ? 'active' : ''}"
+                :onclick "scripts/windows.sh focus '${window}'"
+          (box :orientation "h"
+               :spacing 8
+            ;; Window icon placeholder
+            (label :class "window-icon" :text "🗔")
+            ;; Window title (simplified)
+            (label :class "window-title"
+                   :text "${window}"
+                   :limit-width 25)))))
+    
+    ;; Logout button at bottom
+    (box :class "sidebar-footer"
+      (button :class "logout-btn"
+              :onclick "loginctl terminate-user $USER"
+        (box :orientation "h"
+             :spacing 8
+          (label :text "⏻")
+          (label :class "logout-text" :text "Logout"))))))

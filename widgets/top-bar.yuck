@@ -1,0 +1,165 @@
+;; Top Bar Widget Module
+;; Contains: Telemetry HUD, Workspace Switcher, Media Controls
+
+;; ===== POLLING VARIABLES =====
+
+;; Telemetry data (2s interval)
+(defpoll cpu_percent :interval "2s" "scripts/telemetry.sh cpu")
+(defpoll gpu_percent :interval "2s" "scripts/telemetry.sh gpu")
+(defpoll ram_used :interval "2s" "scripts/telemetry.sh ram_used")
+(defpoll ram_total :interval "2s" "scripts/telemetry.sh ram_total")
+(defpoll vram_used :interval "2s" "scripts/telemetry.sh vram_used")
+(defpoll vram_total :interval "2s" "scripts/telemetry.sh vram_total")
+(defpoll fps :interval "2s" "scripts/telemetry.sh fps")
+(defpoll net_down :interval "2s" "scripts/telemetry.sh net_down")
+(defpoll net_up :interval "2s" "scripts/telemetry.sh net_up")
+(defpoll cpu_temp :interval "2s" "scripts/telemetry.sh cpu_temp")
+(defpoll gpu_temp :interval "2s" "scripts/telemetry.sh gpu_temp")
+(defpoll sys_temp :interval "2s" "scripts/telemetry.sh sys_temp")
+(defpoll cpu_fan :interval "2s" "scripts/telemetry.sh cpu_fan")
+(defpoll gpu_fan :interval "2s" "scripts/telemetry.sh gpu_fan")
+
+;; Workspace data
+(defpoll current_workspace :interval "1s" "scripts/workspace.sh current")
+(defpoll workspace_count :interval "5s" "scripts/workspace.sh count")
+
+;; Media data
+(defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
+(defpoll media_title :interval "2s" "playerctl metadata title 2>/dev/null || echo ''")
+(defpoll volume :interval "1s" "scripts/media.sh volume")
+
+;; ===== MAIN TOP BAR WIDGET =====
+
+(defwidget top-bar []
+  (box :class "top-bar"
+       :orientation "h"
+       :space-evenly false
+    (quick-settings-trigger)
+    (box :class "spacer" :width 20)
+    (telemetry-hud)
+    (box :class "spacer" :hexpand true)
+    (workspace-switcher)
+    (box :class "spacer" :hexpand true)
+    (media-controls)))
+
+;; ===== TELEMETRY HUD SUB-WIDGET =====
+
+(defwidget telemetry-hud []
+  (box :class "telemetry-hud"
+       :orientation "h"
+       :space-evenly false
+       :spacing 20
+    ;; Performance metrics
+    (box :class "telemetry-section performance"
+         :orientation "h"
+         :spacing 10
+      (metric :label "CPU" :value "${cpu_percent}%" :class "cpu")
+      (metric :label "GPU" :value "${gpu_percent}%" :class "gpu")
+      (metric :label "RAM" :value "${ram_used}/${ram_total}GB" :class "ram")
+      (metric :label "VRAM" :value "${vram_used}/${vram_total}GB" :class "vram")
+      (metric :label "FPS" :value fps :class "fps"))
+    
+    ;; Thermals
+    (box :class "telemetry-section thermals"
+         :orientation "h"
+         :spacing 10
+      (temp-metric :label "CPU" :value cpu_temp)
+      (temp-metric :label "GPU" :value gpu_temp)
+      (temp-metric :label "SYS" :value sys_temp))
+    
+    ;; Cooling
+    (box :class "telemetry-section cooling"
+         :orientation "h"
+         :spacing 10
+      (metric :label "CPU Fan" :value "${cpu_fan} RPM" :class "fan")
+      (metric :label "GPU Fan" :value "${gpu_fan} RPM" :class "fan"))
+    
+    ;; Network
+    (box :class "telemetry-section network"
+         :orientation "h"
+         :spacing 10
+      (metric :label "↓" :value "${net_down} MB/s" :class "net-down")
+      (metric :label "↑" :value "${net_up} MB/s" :class "net-up"))
+    
+    ;; Fan safety warning
+    (box :class "fan-warning ${cpu_temp > 80 && cpu_fan < 500 ? 'active' : 'hidden'}"
+      (label :text "■ FANS OFF"))))
+
+;; Helper widget for regular metrics
+(defwidget metric [label value class]
+  (box :class "metric ${class}"
+       :orientation "v"
+       :spacing 2
+    (label :class "metric-label" :text label)
+    (label :class "metric-value" :text value)))
+
+;; Helper widget for temperature metrics with color coding
+(defwidget temp-metric [label value]
+  (box :class "metric temp ${value < 60 ? 'temp-cyan' : value < 70 ? 'temp-yellow' : value < 80 ? 'temp-orange' : 'temp-red'}"
+       :orientation "v"
+       :spacing 2
+    (label :class "metric-label" :text label)
+    (label :class "metric-value" :text "${value}°C")))
+
+;; ===== WORKSPACE SWITCHER SUB-WIDGET =====
+
+(defwidget workspace-switcher []
+  (box :class "workspace-switcher island"
+       :orientation "h"
+       :spacing 8
+    (for workspace in {workspace_count > 0 ? range(1, workspace_count + 1) : [1, 2, 3, 4]}
+      (button :class "workspace-indicator ${current_workspace == workspace ? 'active' : ''}"
+              :onclick "scripts/workspace.sh switch ${workspace}"
+        (label :text "●")))))
+
+;; ===== MEDIA CONTROLS SUB-WIDGET =====
+
+(defwidget media-controls []
+  (box :class "media-controls"
+       :orientation "h"
+       :spacing 15
+    ;; Media info
+    (box :class "media-info"
+         :orientation "v"
+      (label :class "media-title" 
+             :text "${media_title != '' ? media_title : 'No media playing'}"
+             :limit-width 30))
+    
+    ;; Playback controls
+    (box :class "playback-controls"
+         :orientation "h"
+         :spacing 8
+      (button :class "media-btn" 
+              :onclick "playerctl previous"
+        (label :text "⏮"))
+      (button :class "media-btn play-pause" 
+              :onclick "playerctl play-pause"
+        (label :text "${media_status == 'Playing' ? '⏸' : '▶'}"))
+      (button :class "media-btn" 
+              :onclick "playerctl next"
+        (label :text "⏭")))
+    
+    ;; Volume controls
+    (box :class "volume-controls"
+         :orientation "h"
+         :spacing 8
+      (button :class "volume-btn" 
+              :onclick "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+        (label :text "🔉"))
+      ;; Volume progress bar + percentage label
+      (box :class "volume-bar-container"
+           :orientation "v"
+           :spacing 2
+        (scale :class "volume-bar"
+               :value volume
+               :min 0
+               :max 100
+               :width 80
+               :onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%")
+        (label :class "volume-value" :text "${volume}%"))
+      (button :class "volume-btn" 
+              :onclick "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+        (label :text "🔊"))
+      (button :class "mixer-btn" 
+              :onclick "pavucontrol &"
+        (label :text "🎚")))))

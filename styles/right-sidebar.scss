@@ -1,0 +1,110 @@
+// Right Sidebar Styles
+// Clock and app shortcuts - Always expanded when visible
+
+// ===== SIDEBAR CONTAINER =====
+
+.right-sidebar {
+  background: $bg-primary;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 350px;
+  max-width: 350px;
+  
+  // Always show all content when visible
+  .clock-display,
+  .app-shortcuts,
+  .page-navigation {
+    opacity: 1;
+    pointer-events: all;
+    display: block;
+  }
+}
+
+// ===== CLOCK DISPLAY =====
+
+.clock-display {
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .time-display {
+    color: $accent-cyan;
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px $accent-cyan;
+  }
+  
+  .date-display {
+    color: $text-secondary;
+    font-size: 14px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+// ===== APP SHORTCUTS =====
+
+.app-shortcuts {
+  padding: 20px 10px;
+}
+
+.app-grid {
+  @include transition-opacity;
+  
+  &.hidden {
+    display: none;
+  }
+  
+  &.visible {
+    display: block;
+  }
+}
+
+.app-shortcut {
+  @include button-base;
+  background: $bg-secondary;
+  padding: 12px;
+  border-radius: $border-radius;
+  margin-bottom: 8px;
+  @include transition-fast;
+  @include hover-glow($accent-cyan);
+  
+  &:hover {
+    background: $bg-tertiary;
+    transform: translateX(-5px);
+  }
+  
+  .app-icon {
+    font-size: 32px;
+    color: $text-primary;
+    min-width: 48px;
+    text-align: center;
+    @include transition-transform;
+  }
+  
+  .app-name {
+    color: $text-primary;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+// ===== PAGE NAVIGATION =====
+
+.page-navigation {
+  padding: 15px 0;
+  
+  .page-btn {
+    @include button-base;
+    color: $text-muted;
+    padding: 4px 8px;
+    font-size: 12px;
+    @include transition-fast;
+    
+    &:hover {
+      color: $accent-cyan;
+      transform: scale(1.3);
+    }
+  }
+}

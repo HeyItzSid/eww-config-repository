@@ -1,0 +1,157 @@
+// Bottom Bar Styles
+// Search bar and app dock
+
+// ===== BOTTOM BAR CONTAINER =====
+
+.bottom-bar {
+  background: $bg-primary;
+  padding: 10px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// ===== SEARCH BAR =====
+
+.search-container {
+  min-width: 400px;
+  @include transition-normal;
+  
+  &.focused {
+    box-shadow: 0 0 20px $accent-cyan;
+  }
+}
+
+.search-input-container {
+  padding: 8px 12px;
+  
+  .search-icon {
+    color: $text-muted;
+    font-size: 16px;
+  }
+  
+  .search-input {
+    background: transparent;
+    color: $text-primary;
+    border: none;
+    outline: none;
+    min-width: 300px;
+    font-size: 14px;
+    
+    &:focus {
+      color: $accent-cyan;
+    }
+  }
+}
+
+// Search results drawer (expands upward)
+.search-results {
+  background: $bg-secondary;
+  border-radius: $border-radius $border-radius 0 0;
+  padding: 10px;
+  margin-bottom: 5px;
+  max-height: 400px;
+  overflow-y: auto;
+  @include transition-height;
+  
+  &.hidden {
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+  }
+  
+  &.visible {
+    max-height: 400px;
+    opacity: 1;
+  }
+}
+
+.search-result-item {
+  background: transparent;
+  padding: 10px;
+  border-radius: $border-radius-small;
+  margin-bottom: 5px;
+  @include transition-fast;
+  
+  &:hover {
+    background: $bg-tertiary;
+    transform: translateX(5px);
+  }
+  
+  .result-icon {
+    font-size: 20px;
+    color: $text-secondary;
+    min-width: 32px;
+    text-align: center;
+    @include transition-transform;
+  }
+  
+  .result-name {
+    color: $text-primary;
+    font-size: 13px;
+  }
+}
+
+// ===== APP DOCK =====
+
+.app-dock {
+  padding: 4px 12px;
+}
+
+.dock-app {
+  background: transparent;
+  padding: 8px;
+  border-radius: $border-radius;
+  position: relative;
+  @include transition-transform;
+  
+  // Hover magnification effect (200ms)
+  &.hovered {
+    transform: scale(1.5) translateY(-10px);
+    z-index: 10;
+    
+    .dock-icon {
+      filter: drop-shadow(0 0 10px $accent-cyan);
+    }
+  }
+  
+  // Running app indicator
+  &.running {
+    .running-indicator {
+      color: $accent-green;
+    }
+  }
+  
+  // Active window highlighting
+  &.active {
+    background: rgba(0, 191, 255, 0.2);
+    
+    .dock-icon {
+      filter: drop-shadow(0 0 8px $accent-cyan);
+    }
+  }
+  
+  &:hover:not(.hovered) {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.dock-icon {
+  font-size: 32px;
+  color: $text-primary;
+  @include transition-transform;
+}
+
+.running-indicator {
+  color: transparent;
+  font-size: 8px;
+  text-align: center;
+  @include transition-opacity;
+  
+  &.hidden {
+    opacity: 0;
+  }
+  
+  &.visible {
+    opacity: 1;
+  }
+}

@@ -9,7 +9,7 @@
 (include "./widgets/quick-settings.yuck")
 
 ;; Global state for UI visibility and edge preview
-(defvar ui_visible false)
+(defvar ui_visible true)  ; Changed to true for testing
 (defvar top_edge_hovered false)
 (defvar bottom_edge_hovered false)
 (defvar left_edge_hovered false)
@@ -26,6 +26,7 @@
   :stacking "fg"
   :exclusive false
   :focusable false
+  :windowtype "dock"
   (box :class "desktop-container"
        :orientation "v"
     ;; Top hover zone with edge preview

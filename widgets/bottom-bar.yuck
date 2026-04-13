@@ -17,7 +17,7 @@
 
 ;; ===== DOCK APP SHORTCUTS =====
 
-(defvar dock_apps ["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
+(defvar dock_apps "brave-browser kiro discord code kitty thunar")
 
 ;; ===== MAIN BOTTOM BAR WIDGET =====
 
@@ -68,7 +68,7 @@
   (box :class "app-dock"
        :orientation "h"
        :spacing 12
-    (for app in dock_apps
+    (for app in {strsplit(dock_apps, " ")}
       (eventbox :onhover "eww update hovered_app='${app}'"
                 :onhoverlost "eww update hovered_app=''"
         (button :class "dock-app ${hovered_app == app ? 'hovered' : ''} ${running_apps =~ app ? 'running' : ''}"

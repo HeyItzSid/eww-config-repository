@@ -12,8 +12,8 @@
 
 ;; ===== APP SHORTCUTS DATA =====
 
-(defvar app_shortcuts_page1 ["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
-(defvar app_shortcuts_page2 ["gimp" "vlc" "steam" "obs"])
+(defvar app_shortcuts_page1 "brave-browser kiro discord code kitty thunar")
+(defvar app_shortcuts_page2 "gimp vlc steam obs")
 
 ;; ===== MAIN RIGHT SIDEBAR WIDGET =====
 
@@ -39,7 +39,7 @@
       (box :class "app-grid ${app_page == 0 ? 'visible' : 'hidden'}"
            :orientation "v"
            :spacing 10
-        (for app in app_shortcuts_page1
+        (for app in {strsplit(app_shortcuts_page1, " ")}
           (button :class "app-shortcut"
                   :onclick "scripts/apps.sh launch '${app}'"
             (box :orientation "h"
@@ -51,7 +51,7 @@
       (box :class "app-grid ${app_page == 1 ? 'visible' : 'hidden'}"
            :orientation "v"
            :spacing 10
-        (for app in app_shortcuts_page2
+        (for app in {strsplit(app_shortcuts_page2, " ")}
           (button :class "app-shortcut"
                   :onclick "scripts/apps.sh launch '${app}'"
             (box :orientation "h"

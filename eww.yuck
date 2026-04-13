@@ -2,11 +2,14 @@
 
 ;; ===== POLLING VARIABLES =====
 
-(defpoll cpu_usage :interval "2s" "top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1")
-(defpoll ram_usage :interval "2s" "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2}'")
-(defpoll cpu_temp  :interval "2s" "sensors 2>/dev/null | grep 'Core 0' | awk '{print $3}' | tr -d '+°C' | head -1 || echo 'N/A'")
-(defpoll net_down  :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $2/1024/1024}'")
-(defpoll volume    :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
+(defpoll cpu_usage    :interval "2s" "top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1")
+(defpoll ram_usage    :interval "2s" "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2}'")
+(defpoll cpu_temp     :interval "2s" "sensors 2>/dev/null | grep 'Core 0' | awk '{print $3}' | tr -d '+°C' | head -1 || echo 'N/A'")
+(defpoll net_down     :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $2/1024/1024}'")
+(defpoll volume       :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
+(defpoll media_title  :interval "2s" "playerctl metadata title 2>/dev/null | head -c 30 || echo 'No media'")
+(defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
+(defpoll workspace    :interval "1s" "xdotool get_desktop 2>/dev/null || echo '0'")
 
 ;; ===== TOP BAR =====
 
@@ -33,16 +36,35 @@
       (label :text "↓ ${net_down}MB/s")
       (label :text "🔊 ${volume}%"))
     
-    ;; Center - Clock
+    ;; Center - Workspace + Clock
     (box :class "center-section"
          :halign "center"
          :hexpand true
-      (label :text "${formattime(EWW_TIME, '%H:%M:%S')}"))
+         :spacing 20
+      ;; Workspace indicators
+      (box :spacing 6
+        (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 0" "●")
+        (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 1" "●")
+        (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 2" "●")
+        (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 3" "●"))
+      ;; Clock
+      (label :class "clock" :text "${formattime(EWW_TIME, '%H:%M:%S')}"))
     
-    ;; Right - Controls
+    ;; Right - Media + Controls
     (box :class "right-section"
          :halign "end"
          :spacing 10
+      ;; Media controls
+      (label :class "media-title" :text "${media_title}")
+      (button :onclick "playerctl previous" "⏮")
+      (button :onclick "playerctl play-pause"
+        "${media_status == 'Playing' ? '⏸' : '▶'}")
+      (button :onclick "playerctl next" "⏭")
+      ;; System buttons
       (button :onclick "pavucontrol &" "🔊")
       (button :onclick "nm-connection-editor &" "📶")
       (button :onclick "gnome-control-center &" "⚙️"))))

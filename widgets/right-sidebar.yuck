@@ -12,21 +12,8 @@
 
 ;; ===== APP SHORTCUTS DATA =====
 
-(defvar app_shortcuts_page1 [
-  "brave-browser|Brave|/usr/share/icons/hicolor/48x48/apps/brave-browser.png"
-  "kiro|Kiro|/usr/share/icons/hicolor/48x48/apps/kiro.png"
-  "discord|Discord|/usr/share/icons/hicolor/48x48/apps/discord.png"
-  "code|VS Code|/usr/share/icons/hicolor/48x48/apps/code.png"
-  "kitty|Terminal|/usr/share/icons/hicolor/48x48/apps/kitty.png"
-  "thunar|Files|/usr/share/icons/hicolor/48x48/apps/thunar.png"
-])
-
-(defvar app_shortcuts_page2 [
-  "gimp|GIMP|/usr/share/icons/hicolor/48x48/apps/gimp.png"
-  "vlc|VLC|/usr/share/icons/hicolor/48x48/apps/vlc.png"
-  "steam|Steam|/usr/share/icons/hicolor/48x48/apps/steam.png"
-  "obs|OBS Studio|/usr/share/icons/hicolor/48x48/apps/obs.png"
-])
+(defvar app_shortcuts_page1 '["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
+(defvar app_shortcuts_page2 '["gimp" "vlc" "steam" "obs"])
 
 ;; ===== MAIN RIGHT SIDEBAR WIDGET =====
 
@@ -54,12 +41,11 @@
            :spacing 10
         (for app in app_shortcuts_page1
           (button :class "app-shortcut"
-                  :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+                  :onclick "scripts/apps.sh launch '${app}'"
             (box :orientation "h"
                  :spacing 10
               (label :class "app-icon" :text "📱")
-              (label :class "app-name" 
-                     :text "${strsplit(app, '|')[1]}")))))
+              (label :class "app-name" :text "${app}")))))
       
       ;; Page 2 apps
       (box :class "app-grid ${app_page == 1 ? 'visible' : 'hidden'}"
@@ -67,12 +53,11 @@
            :spacing 10
         (for app in app_shortcuts_page2
           (button :class "app-shortcut"
-                  :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+                  :onclick "scripts/apps.sh launch '${app}'"
             (box :orientation "h"
                  :spacing 10
               (label :class "app-icon" :text "📱")
-              (label :class "app-name" 
-                     :text "${strsplit(app, '|')[1]}")))))
+              (label :class "app-name" :text "${app}")))))
       
       ;; Page navigation
       (box :class "page-navigation"

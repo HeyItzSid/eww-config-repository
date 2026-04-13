@@ -17,14 +17,7 @@
 
 ;; ===== DOCK APP SHORTCUTS =====
 
-(defvar dock_apps [
-  "brave-browser|Brave|/usr/share/icons/hicolor/48x48/apps/brave-browser.png"
-  "kiro|Kiro|/usr/share/icons/hicolor/48x48/apps/kiro.png"
-  "discord|Discord|/usr/share/icons/hicolor/48x48/apps/discord.png"
-  "code|VS Code|/usr/share/icons/hicolor/48x48/apps/code.png"
-  "kitty|Terminal|/usr/share/icons/hicolor/48x48/apps/kitty.png"
-  "thunar|Files|/usr/share/icons/hicolor/48x48/apps/thunar.png"
-])
+(defvar dock_apps '["brave-browser" "kiro" "discord" "code" "kitty" "thunar"])
 
 ;; ===== MAIN BOTTOM BAR WIDGET =====
 
@@ -76,13 +69,13 @@
        :orientation "h"
        :spacing 12
     (for app in dock_apps
-      (eventbox :onhover "eww update hovered_app='${strsplit(app, '|')[0]}'"
+      (eventbox :onhover "eww update hovered_app='${app}'"
                 :onhoverlost "eww update hovered_app=''"
-        (button :class "dock-app ${hovered_app == strsplit(app, '|')[0] ? 'hovered' : ''} ${running_apps =~ strsplit(app, '|')[0] ? 'running' : ''}"
-                :onclick "scripts/apps.sh launch '${strsplit(app, '|')[0]}'"
+        (button :class "dock-app ${hovered_app == app ? 'hovered' : ''} ${running_apps =~ app ? 'running' : ''}"
+                :onclick "scripts/apps.sh launch '${app}'"
           (box :orientation "v"
                :spacing 4
             (label :class "dock-icon" :text "📱")
             ;; Running indicator dot
-            (label :class "running-indicator ${running_apps =~ strsplit(app, '|')[0] ? 'visible' : 'hidden'}"
+            (label :class "running-indicator ${running_apps =~ app ? 'visible' : 'hidden'}"
                    :text "●")))))))

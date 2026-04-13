@@ -26,7 +26,7 @@
                       :height "40px"
                       :anchor "top left")
   :stacking "fg"
-  :exclusive false
+  :exclusive true
   :windowtype "dock"
   (box :class "island left-island"
        :orientation "h"
@@ -59,13 +59,13 @@
 
 (defwindow center-bar
   :monitor 0
-  :geometry (geometry :x "50%"
+  :geometry (geometry :x "62%"
                       :y "10px"
                       :width "220px"
                       :height "40px"
-                      :anchor "top center")
+                      :anchor "top left")
   :stacking "fg"
-  :exclusive false
+  :exclusive true
   :windowtype "dock"
   (box :class "island center-island"
        :orientation "h"
@@ -96,7 +96,7 @@
                       :height "40px"
                       :anchor "top right")
   :stacking "fg"
-  :exclusive false
+  :exclusive true
   :windowtype "dock"
   (box :class "island right-island"
        :orientation "h"

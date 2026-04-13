@@ -32,9 +32,10 @@
     (eventbox :class "hover-zone top-zone"
               :onhover "eww update top_edge_hovered=true && eww update ui_visible=true"
               :onhoverlost "eww update top_edge_hovered=false && eww update ui_visible=false"
-      (box :class "top-edge-preview ${top_edge_hovered ? 'active' : ''}")
-      (box :class "top-bar-container ${ui_visible ? 'visible' : 'hidden'}"
-        (top-bar)))
+      (box :orientation "v"
+        (box :class "top-edge-preview ${top_edge_hovered ? 'active' : ''}")
+        (box :class "top-bar-container ${ui_visible ? 'visible' : 'hidden'}"
+          (top-bar))))
     
     ;; Middle section with side hover zones
     (box :class "middle-section"
@@ -44,9 +45,10 @@
       (eventbox :class "hover-zone left-zone"
                 :onhover "eww update left_edge_hovered=true && eww update ui_visible=true"
                 :onhoverlost "eww update left_edge_hovered=false && eww update ui_visible=false"
-        (box :class "left-edge-preview ${left_edge_hovered ? 'active' : ''}")
-        (box :class "left-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
-          (left-sidebar)))
+        (box :orientation "h"
+          (box :class "left-edge-preview ${left_edge_hovered ? 'active' : ''}")
+          (box :class "left-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
+            (left-sidebar))))
       
       ;; Workspace area (transparent)
       (box :class "workspace-area" :hexpand true)
@@ -55,17 +57,19 @@
       (eventbox :class "hover-zone right-zone"
                 :onhover "eww update right_edge_hovered=true && eww update ui_visible=true"
                 :onhoverlost "eww update right_edge_hovered=false && eww update ui_visible=false"
-        (box :class "right-edge-preview ${right_edge_hovered ? 'active' : ''}")
-        (box :class "right-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
-          (right-sidebar))))
+        (box :orientation "h"
+          (box :class "right-edge-preview ${right_edge_hovered ? 'active' : ''}")
+          (box :class "right-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
+            (right-sidebar)))))
     
     ;; Bottom hover zone with edge preview
     (eventbox :class "hover-zone bottom-zone"
               :onhover "eww update bottom_edge_hovered=true && eww update ui_visible=true"
               :onhoverlost "eww update bottom_edge_hovered=false && eww update ui_visible=false"
-      (box :class "bottom-edge-preview ${bottom_edge_hovered ? 'active' : ''}")
-      (box :class "bottom-bar-container ${ui_visible ? 'visible' : 'hidden'}"
-        (bottom-bar)))
+      (box :orientation "v"
+        (box :class "bottom-edge-preview ${bottom_edge_hovered ? 'active' : ''}")
+        (box :class "bottom-bar-container ${ui_visible ? 'visible' : 'hidden'}"
+          (bottom-bar))))
     
     ;; Quick settings panel (overlay)
     (quick-settings-panel)))

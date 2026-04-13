@@ -1,0 +1,28 @@
+// SUPER SIMPLE STYLES
+
+* {
+  all: unset;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+}
+
+.simple-bar {
+  background: rgba(18, 18, 18, 0.95);
+  color: #00bfff;
+  padding: 0 20px;
+}
+
+.left-section, .center-section, .right-section {
+  padding: 8px;
+}
+
+button {
+  background: rgba(0, 191, 255, 0.2);
+  color: #00bfff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  
+  &:hover {
+    background: rgba(0, 191, 255, 0.4);
+  }
+}

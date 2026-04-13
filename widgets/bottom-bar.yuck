@@ -50,7 +50,7 @@
              :value search_query
              :onchange "eww update search_query='{}'"
              :onfocus "eww update search_focused=true"
-             :onblur "eww update search_focused=false"))
+             :onblur "eww update search_focused=false"))))
 
 ;; ===== APP DOCK SUB-WIDGET =====
 

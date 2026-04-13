@@ -59,11 +59,11 @@
 
 (defwindow center-bar
   :monitor 0
-  :geometry (geometry :x "55%"
+  :geometry (geometry :x "580px"
                       :y "10px"
                       :width "220px"
                       :height "40px"
-                      :anchor "top center")
+                      :anchor "top left")
   :stacking "fg"
   :exclusive true
   :windowtype "dock"

@@ -1,5 +1,5 @@
 ;; Main EWW Configuration File
-;; Custom Desktop UI - Invisible Hover Zones with Edge Preview
+;; Custom Desktop UI - Separate Windows for Each Component
 
 ;; Include widget modules
 (include "./widgets/top-bar.yuck")
@@ -8,69 +8,77 @@
 (include "./widgets/bottom-bar.yuck")
 (include "./widgets/quick-settings.yuck")
 
-;; Global state for UI visibility and edge preview
-(defvar ui_visible true)  ; Changed to true for testing
-(defvar top_edge_hovered false)
-(defvar bottom_edge_hovered false)
-(defvar left_edge_hovered false)
-(defvar right_edge_hovered false)
+;; ===== TOP BAR WINDOW =====
 
-;; Main window definition
-(defwindow main-desktop
+(defwindow top-bar-window
   :monitor 0
   :geometry (geometry :x "0%"
                       :y "0%"
                       :width "100%"
+                      :height "50px"
+                      :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  :windowtype "dock"
+  (top-bar))
+
+;; ===== LEFT SIDEBAR WINDOW =====
+
+(defwindow left-sidebar-window
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "350px"
                       :height "100%"
-                      :anchor "center")
+                      :anchor "left center")
   :stacking "fg"
   :exclusive false
   :focusable false
   :windowtype "dock"
-  (box :class "desktop-container"
-       :orientation "v"
-    ;; Top hover zone with edge preview
-    (eventbox :class "hover-zone top-zone"
-              :onhover "eww update top_edge_hovered=true && eww update ui_visible=true"
-              :onhoverlost "eww update top_edge_hovered=false && eww update ui_visible=false"
-      (box :orientation "v"
-        (box :class "top-edge-preview ${top_edge_hovered ? 'active' : ''}")
-        (box :class "top-bar-container ${ui_visible ? 'visible' : 'hidden'}"
-          (top-bar))))
-    
-    ;; Middle section with side hover zones
-    (box :class "middle-section"
-         :orientation "h"
-         :vexpand true
-      ;; Left hover zone with edge preview
-      (eventbox :class "hover-zone left-zone"
-                :onhover "eww update left_edge_hovered=true && eww update ui_visible=true"
-                :onhoverlost "eww update left_edge_hovered=false && eww update ui_visible=false"
-        (box :orientation "h"
-          (box :class "left-edge-preview ${left_edge_hovered ? 'active' : ''}")
-          (box :class "left-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
-            (left-sidebar))))
-      
-      ;; Workspace area (transparent)
-      (box :class "workspace-area" :hexpand true)
-      
-      ;; Right hover zone with edge preview
-      (eventbox :class "hover-zone right-zone"
-                :onhover "eww update right_edge_hovered=true && eww update ui_visible=true"
-                :onhoverlost "eww update right_edge_hovered=false && eww update ui_visible=false"
-        (box :orientation "h"
-          (box :class "right-edge-preview ${right_edge_hovered ? 'active' : ''}")
-          (box :class "right-sidebar-container ${ui_visible ? 'visible' : 'hidden'}"
-            (right-sidebar)))))
-    
-    ;; Bottom hover zone with edge preview
-    (eventbox :class "hover-zone bottom-zone"
-              :onhover "eww update bottom_edge_hovered=true && eww update ui_visible=true"
-              :onhoverlost "eww update bottom_edge_hovered=false && eww update ui_visible=false"
-      (box :orientation "v"
-        (box :class "bottom-edge-preview ${bottom_edge_hovered ? 'active' : ''}")
-        (box :class "bottom-bar-container ${ui_visible ? 'visible' : 'hidden'}"
-          (bottom-bar))))
-    
-    ;; Quick settings panel (overlay)
-    (quick-settings-panel)))
+  (left-sidebar))
+
+;; ===== RIGHT SIDEBAR WINDOW =====
+
+(defwindow right-sidebar-window
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "350px"
+                      :height "100%"
+                      :anchor "right center")
+  :stacking "fg"
+  :exclusive false
+  :focusable false
+  :windowtype "dock"
+  (right-sidebar))
+
+;; ===== BOTTOM BAR WINDOW =====
+
+(defwindow bottom-bar-window
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "80px"
+                      :anchor "bottom center")
+  :stacking "fg"
+  :exclusive true
+  :focusable false
+  :windowtype "dock"
+  (bottom-bar))
+
+;; ===== QUICK SETTINGS WINDOW =====
+
+(defwindow quick-settings-window
+  :monitor 0
+  :geometry (geometry :x "20px"
+                      :y "60px"
+                      :width "450px"
+                      :height "600px"
+                      :anchor "top left")
+  :stacking "overlay"
+  :exclusive false
+  :focusable true
+  :windowtype "dialog"
+  (quick-settings-panel))

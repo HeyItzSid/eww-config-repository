@@ -29,12 +29,12 @@
     ;; Left - System monitoring
     (box :class "left-section"
          :halign "start"
-         :spacing 15
-      (label :text "CPU: ${cpu_usage}%")
-      (label :text "RAM: ${ram_usage}%")
-      (label :text "🌡 ${cpu_temp}")
-      (label :text "↓ ${net_down}MB/s")
-      (label :text "🔊 ${volume}%"))
+         :spacing 8
+      (label :text "CPU:${cpu_usage}%")
+      (label :text "RAM:${ram_usage}%")
+      (label :text "🌡${cpu_temp}")
+      (label :text "↓${net_down}M")
+      (label :text "🔊${volume}%"))
     
     ;; Center - Workspace + Clock
     (box :class "center-section"
@@ -57,14 +57,11 @@
     ;; Right - Media + Controls
     (box :class "right-section"
          :halign "end"
-         :spacing 10
-      ;; Media controls
+         :spacing 6
       (label :class "media-title" :text "${media_title}")
       (button :onclick "playerctl previous" "⏮")
       (button :onclick "playerctl play-pause"
         "${media_status == 'Playing' ? '⏸' : '▶'}")
       (button :onclick "playerctl next" "⏭")
-      ;; System buttons
       (button :onclick "pavucontrol &" "🔊")
-      (button :onclick "nm-connection-editor &" "📶")
-      (button :onclick "gnome-control-center &" "⚙️"))))
+      (button :onclick "nm-connection-editor &" "📶"))))

@@ -27,7 +27,8 @@
                       :anchor "top left")
   :stacking "fg"
   :exclusive false
-  :windowtype "dock"
+  :focusable false
+  :windowtype "normal"
   (box :class "island left-island"
        :orientation "h"
        :space-evenly false
@@ -65,8 +66,9 @@
                       :height "35px"
                       :anchor "top center")
   :stacking "fg"
-  :exclusive true
-  :windowtype "dock"
+  :exclusive false
+  :focusable false
+  :windowtype "normal"
   (box :class "island center-island"
        :orientation "h"
        :space-evenly true
@@ -91,7 +93,8 @@
                       :anchor "top right")
   :stacking "fg"
   :exclusive false
-  :windowtype "dock"
+  :focusable false
+  :windowtype "normal"
   (box :class "island right-island"
        :orientation "h"
        :space-evenly false

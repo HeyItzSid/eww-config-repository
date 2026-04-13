@@ -1,51 +1,111 @@
-// EWW STYLES - Building up step by step
+// EWW STYLES - Three Island Bars
 
 * {
   all: unset;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 11px;
-}
-
-.top-bar {
-  background: rgba(18, 18, 18, 0.95);
+  font-size: 12px;
   color: #00bfff;
-  padding: 0 10px;
 }
 
-.left-section, .center-section, .right-section {
-  padding: 4px 8px;
+// ===== ISLAND BASE =====
+
+.island {
+  background: rgba(18, 18, 18, 0.92);
+  border-radius: 12px;
+  padding: 0 14px;
+  border: 1px solid rgba(0, 191, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
+
+.left-island  { border-left:  3px solid #00bfff; }
+.center-island { border-bottom: 3px solid #00bfff; }
+.right-island { border-right: 3px solid #00bfff; }
+
+// ===== STATS =====
+
+.stat {
+  color: #00bfff;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.cpu   { color: #00bfff; }
+.ram   { color: #00ff88; }
+.temp  { color: #ff8800; }
+.net   { color: #8888ff; }
+.wifi  { color: #00ff88; }
+
+.separator {
+  color: rgba(0, 191, 255, 0.3);
+  font-size: 10px;
+}
+
+// ===== CLOCK =====
 
 .clock {
   color: #00bfff;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
+  padding: 0 4px;
 }
 
+// ===== WORKSPACE BUTTONS =====
+
 .ws-btn {
+  background: rgba(0, 191, 255, 0.1);
   color: #006688;
-  font-size: 8px;
-  padding: 2px 4px;
-  border-radius: 50%;
-  
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+
   &.active {
+    background: rgba(0, 191, 255, 0.25);
+    color: #00bfff;
+    border: 1px solid rgba(0, 191, 255, 0.5);
+  }
+
+  &:hover {
+    background: rgba(0, 191, 255, 0.2);
     color: #00bfff;
   }
 }
 
+// ===== MEDIA =====
+
 .media-title {
   color: #0099cc;
   font-size: 11px;
-  min-width: 100px;
+  min-width: 80px;
 }
 
-button {
-  background: rgba(0, 191, 255, 0.15);
+.media-btn {
+  background: transparent;
   color: #00bfff;
-  padding: 3px 7px;
+  padding: 4px 6px;
   border-radius: 6px;
-  
+  font-size: 12px;
+
+  &.play {
+    background: rgba(0, 191, 255, 0.2);
+    padding: 4px 10px;
+  }
+
   &:hover {
-    background: rgba(0, 191, 255, 0.35);
+    background: rgba(0, 191, 255, 0.25);
+  }
+}
+
+// ===== CONTROL BUTTONS =====
+
+.ctrl-btn {
+  background: transparent;
+  color: #00bfff;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+
+  &:hover {
+    background: rgba(0, 191, 255, 0.2);
   }
 }

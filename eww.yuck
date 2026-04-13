@@ -1,4 +1,4 @@
-;; EWW CONFIG - Building up step by step
+;; EWW CONFIG - Three Island Top Bars
 
 ;; ===== POLLING VARIABLES =====
 
@@ -6,62 +6,121 @@
 (defpoll ram_usage    :interval "2s" "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2}'")
 (defpoll cpu_temp     :interval "2s" "sensors 2>/dev/null | grep 'Core 0' | awk '{print $3}' | tr -d '+°C' | head -1 || echo 'N/A'")
 (defpoll net_down     :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $2/1024/1024}'")
+(defpoll net_up       :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $10/1024/1024}'")
+(defpoll wifi_ssid    :interval "5s" "iwgetid -r 2>/dev/null || echo 'No WiFi'")
 (defpoll volume       :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
-(defpoll media_title  :interval "2s" "playerctl metadata title 2>/dev/null | head -c 30 || echo 'No media'")
+(defpoll muted        :interval "1s" "pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -c 'yes' || echo '0'")
+(defpoll media_title  :interval "2s" "playerctl metadata title 2>/dev/null | head -c 25 || echo 'No media'")
+(defpoll media_artist :interval "2s" "playerctl metadata artist 2>/dev/null | head -c 20 || echo ''")
 (defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
 (defpoll workspace    :interval "1s" "xdotool get_desktop 2>/dev/null || echo '0'")
+(defpoll brightness   :interval "2s" "brightnessctl get 2>/dev/null | awk -v max=$(brightnessctl max 2>/dev/null) '{printf \"%.0f\", $1*100/max}' || echo '100'")
 
-;; ===== TOP BAR =====
+;; ===== LEFT ISLAND - Stats & Controls =====
 
-(defwindow topbar
+(defwindow left-bar
   :monitor 0
-  :geometry (geometry :x "0%"
-                      :y "0px"
-                      :width "100%"
+  :geometry (geometry :x "10px"
+                      :y "10px"
+                      :width "380px"
+                      :height "40px"
+                      :anchor "top left")
+  :stacking "fg"
+  :exclusive false
+  :windowtype "dock"
+  (box :class "island left-island"
+       :orientation "h"
+       :space-evenly false
+       :spacing 10
+    ;; Stats
+    (label :class "stat cpu" :text "CPU ${cpu_usage}%")
+    (label :class "separator" :text "|")
+    (label :class "stat ram" :text "RAM ${ram_usage}%")
+    (label :class "separator" :text "|")
+    (label :class "stat temp" :text "🌡${cpu_temp}")
+    (label :class "separator" :text "|")
+    (label :class "stat net" :text "↓${net_down} ↑${net_up}")
+    (label :class "separator" :text "|")
+    ;; WiFi
+    (label :class "stat wifi" :text "📶 ${wifi_ssid}")
+    (label :class "separator" :text "|")
+    ;; Settings button
+    (button :class "ctrl-btn"
+            :onclick "nm-connection-editor &"
+      "🌐")
+    (button :class "ctrl-btn"
+            :onclick "brightnessctl set 10%- &"
+      "🔅")
+    (button :class "ctrl-btn"
+            :onclick "brightnessctl set 10%+ &"
+      "🔆")))
+
+;; ===== CENTER ISLAND - Workspace Switcher =====
+
+(defwindow center-bar
+  :monitor 0
+  :geometry (geometry :x "50%"
+                      :y "10px"
+                      :width "220px"
                       :height "40px"
                       :anchor "top center")
   :stacking "fg"
-  :exclusive true
+  :exclusive false
   :windowtype "dock"
-  (box :class "top-bar"
+  (box :class "island center-island"
+       :orientation "h"
+       :space-evenly true
+       :spacing 6
+    (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 0"
+      "1")
+    (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 1"
+      "2")
+    (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 2"
+      "3")
+    (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 3"
+      "4")
+    (label :class "separator" :text "|")
+    (label :class "clock" :text "${formattime(EWW_TIME, '%H:%M')}")))
+
+;; ===== RIGHT ISLAND - Media & Volume =====
+
+(defwindow right-bar
+  :monitor 0
+  :geometry (geometry :x "10px"
+                      :y "10px"
+                      :width "360px"
+                      :height "40px"
+                      :anchor "top right")
+  :stacking "fg"
+  :exclusive false
+  :windowtype "dock"
+  (box :class "island right-island"
        :orientation "h"
        :space-evenly false
-    ;; Left - System monitoring
-    (box :class "left-section"
-         :halign "start"
-         :spacing 8
-      (label :text "CPU:${cpu_usage}%")
-      (label :text "RAM:${ram_usage}%")
-      (label :text "🌡${cpu_temp}")
-      (label :text "↓${net_down}M")
-      (label :text "🔊${volume}%"))
-    
-    ;; Center - Workspace + Clock
-    (box :class "center-section"
-         :halign "center"
-         :hexpand true
-         :spacing 20
-      ;; Workspace indicators
-      (box :spacing 6
-        (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 0" "●")
-        (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 1" "●")
-        (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 2" "●")
-        (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 3" "●"))
-      ;; Clock
-      (label :class "clock" :text "${formattime(EWW_TIME, '%H:%M:%S')}"))
-    
-    ;; Right - Media + Controls
-    (box :class "right-section"
-         :halign "end"
-         :spacing 6
-      (label :class "media-title" :text "${media_title}")
-      (button :onclick "playerctl previous" "⏮")
-      (button :onclick "playerctl play-pause"
-        "${media_status == 'Playing' ? '⏸' : '▶'}")
-      (button :onclick "playerctl next" "⏭")
-      (button :onclick "pavucontrol &" "🔊")
-      (button :onclick "nm-connection-editor &" "📶"))))
+       :spacing 8
+    ;; Media info
+    (label :class "media-title"
+           :text "${media_status == 'Playing' ? '♪ ${media_title}' : '—'}")
+    (label :class "separator" :text "|")
+    ;; Playback controls
+    (button :class "media-btn" :onclick "playerctl previous" "⏮")
+    (button :class "media-btn play"
+            :onclick "playerctl play-pause"
+      "${media_status == 'Playing' ? '⏸' : '▶'}")
+    (button :class "media-btn" :onclick "playerctl next" "⏭")
+    (label :class "separator" :text "|")
+    ;; Volume
+    (button :class "ctrl-btn"
+            :onclick "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+      "🔉")
+    (label :class "stat" :text "${muted == '1' ? '🔇' : '🔊'} ${volume}%")
+    (button :class "ctrl-btn"
+            :onclick "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+      "🔊")
+    (button :class "ctrl-btn"
+            :onclick "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+      "${muted == '1' ? '🔇' : '🔈'}")))

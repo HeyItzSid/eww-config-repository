@@ -15,8 +15,6 @@
 (defpoll workspace    :interval "1s" "xdotool get_desktop 2>/dev/null || echo '0'")
 (defpoll brightness   :interval "2s" "brightnessctl get 2>/dev/null | awk -v max=$(brightnessctl max 2>/dev/null) '{printf \"%.0f\", $1*100/max}' || echo '100'")
 
-(defvar center_hovered false)
-
 ;; ===== LEFT ISLAND - Stats & Controls =====
 
 (defwindow left-bar
@@ -57,33 +55,22 @@
                       :width "200px"
                       :height "35px"
                       :anchor "top center")
-  :stacking "fg"
+  :stacking "bottom"
   :exclusive false
   :focusable false
   :windowtype "normal"
-  (eventbox
-    :onhover "eww update center_hovered=true"
-    :onhoverlost "eww update center_hovered=false"
-    (box :orientation "v"
-      ;; Always visible thin line
-      (box :class "center-line")
-      ;; Slides down on hover
-    (revealer
-        :transition "slidedown"
-        :reveal true
-        :duration "250ms"
-        (box :class "island center-island"
-             :orientation "h"
-             :space-evenly true
-             :spacing 6
-          (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
-                  :onclick "xdotool set_desktop 0" "1")
-          (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
-                  :onclick "xdotool set_desktop 1" "2")
-          (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
-                  :onclick "xdotool set_desktop 2" "3")
-          (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
-                  :onclick "xdotool set_desktop 3" "4")))))
+  (box :class "island center-island"
+       :orientation "h"
+       :space-evenly true
+       :spacing 6
+    (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 0" "1")
+    (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 1" "2")
+    (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 2" "3")
+    (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
+            :onclick "xdotool set_desktop 3" "4")))
 
 ;; ===== RIGHT ISLAND - Media & Volume =====
 

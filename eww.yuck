@@ -68,9 +68,9 @@
       ;; Always visible thin line
       (box :class "center-line")
       ;; Slides down on hover
-      (revealer
+    (revealer
         :transition "slidedown"
-        :reveal center_hovered
+        :reveal true
         :duration "250ms"
         (box :class "island center-island"
              :orientation "h"

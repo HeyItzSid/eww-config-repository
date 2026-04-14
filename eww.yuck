@@ -61,7 +61,7 @@
   :windowtype "normal"
   (eventbox
     :onhover "eww open center-bar"
-    :onhoverlost ""
+    :onhoverlost "eww close center-bar"
     (box :class "center-trigger-line")))
 
 ;; ===== CENTER BAR - Opens on hover, closes on leave =====
@@ -78,7 +78,7 @@
   :focusable false
   :windowtype "normal"
   (eventbox
-    :onhoverlost "eww close center-bar"
+    :onhoverlost ""
     (box :class "island center-island"
          :orientation "h"
          :space-evenly true

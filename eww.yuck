@@ -25,7 +25,7 @@
                       :width "400px"
                       :height "35px"
                       :anchor "top left")
-  :stacking "fg"
+  :stacking "bottom"
   :exclusive false
   :focusable false
   :windowtype "normal"
@@ -65,7 +65,7 @@
                       :width "200px"
                       :height "35px"
                       :anchor "top center")
-  :stacking "fg"
+  :stacking "bottom"
   :exclusive false
   :focusable false
   :windowtype "normal"
@@ -91,7 +91,7 @@
                       :width "380px"
                       :height "35px"
                       :anchor "top right")
-  :stacking "fg"
+  :stacking "bottom"
   :exclusive false
   :focusable false
   :windowtype "normal"

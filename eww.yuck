@@ -48,25 +48,7 @@
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%- &" "🔅")
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%+ &" "🔆")))
 
-;; ===== CENTER - Invisible trigger strip =====
-
-(defwindow center-trigger
-  :monitor 0
-  :geometry (geometry :x "50%"
-                      :y "0px"
-                      :width "200px"
-                      :height "2px"
-                      :anchor "top center")
-  :stacking "overlay"
-  :exclusive false
-  :focusable false
-  :windowtype "normal"
-  (eventbox
-    :onhover "eww update center_hovered=true"
-    :onhoverlost "eww update center_hovered=false"
-    (box)))
-
-;; ===== CENTER - Workspace bar slides down on hover =====
+;; ===== CENTER - Workspace bar =====
 
 (defwindow center-bar
   :monitor 0
@@ -79,22 +61,29 @@
   :exclusive false
   :focusable false
   :windowtype "normal"
-  (revealer
-    :transition "slidedown"
-    :reveal center_hovered
-    :duration "250ms"
-    (box :class "island center-island"
-         :orientation "h"
-         :space-evenly true
-         :spacing 6
-      (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
-              :onclick "xdotool set_desktop 0" "1")
-      (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
-              :onclick "xdotool set_desktop 1" "2")
-      (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
-              :onclick "xdotool set_desktop 2" "3")
-      (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
-              :onclick "xdotool set_desktop 3" "4"))))
+  (eventbox
+    :onhover "eww update center_hovered=true"
+    :onhoverlost "eww update center_hovered=false"
+    (box :orientation "v"
+      ;; Always visible thin line
+      (box :class "center-line")
+      ;; Slides down on hover
+      (revealer
+        :transition "slidedown"
+        :reveal center_hovered
+        :duration "250ms"
+        (box :class "island center-island"
+             :orientation "h"
+             :space-evenly true
+             :spacing 6
+          (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
+                  :onclick "xdotool set_desktop 0" "1")
+          (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
+                  :onclick "xdotool set_desktop 1" "2")
+          (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
+                  :onclick "xdotool set_desktop 2" "3")
+          (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
+                  :onclick "xdotool set_desktop 3" "4")))))
 
 ;; ===== RIGHT ISLAND - Media & Volume =====
 

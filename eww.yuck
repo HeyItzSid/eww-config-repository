@@ -46,7 +46,9 @@
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%- &" "🔅")
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%+ &" "🔆")))
 
-;; ===== CENTER - Workspace bar =====
+;; ===== CENTER - Workspace bar with slide =====
+
+(defvar center_hovered false)
 
 (defwindow center-bar
   :monitor 0
@@ -55,22 +57,29 @@
                       :width "200px"
                       :height "35px"
                       :anchor "top center")
-  :stacking "bottom"
+  :stacking "fg"
   :exclusive false
   :focusable false
   :windowtype "normal"
-  (box :class "island center-island"
-       :orientation "h"
-       :space-evenly true
-       :spacing 6
-    (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
-            :onclick "xdotool set_desktop 0" "1")
-    (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
-            :onclick "xdotool set_desktop 1" "2")
-    (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
-            :onclick "xdotool set_desktop 2" "3")
-    (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
-            :onclick "xdotool set_desktop 3" "4")))
+  (revealer
+    :transition "slidedown"
+    :reveal center_hovered
+    :duration "300ms"
+    (eventbox
+      :onhover "eww update center_hovered=true"
+      :onhoverlost "eww update center_hovered=false"
+      (box :class "island center-island"
+           :orientation "h"
+           :space-evenly true
+           :spacing 6
+        (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 0" "1")
+        (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 1" "2")
+        (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 2" "3")
+        (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
+                :onclick "xdotool set_desktop 3" "4")))))
 
 ;; ===== RIGHT ISLAND - Media & Volume =====
 

@@ -11,10 +11,11 @@
 (defpoll volume       :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
 (defpoll muted        :interval "1s" "pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -c 'yes' || echo '0'")
 (defpoll media_title  :interval "2s" "playerctl metadata title 2>/dev/null | head -c 25 || echo 'No media'")
-(defpoll media_artist :interval "2s" "playerctl metadata artist 2>/dev/null | head -c 20 || echo ''")
 (defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
 (defpoll workspace    :interval "1s" "xdotool get_desktop 2>/dev/null || echo '0'")
 (defpoll brightness   :interval "2s" "brightnessctl get 2>/dev/null | awk -v max=$(brightnessctl max 2>/dev/null) '{printf \"%.0f\", $1*100/max}' || echo '100'")
+
+(defvar center_hovered false)
 
 ;; ===== LEFT ISLAND - Stats & Controls =====
 
@@ -33,7 +34,6 @@
        :orientation "h"
        :space-evenly false
        :spacing 10
-    ;; Stats
     (label :class "stat cpu" :text "CPU ${cpu_usage}%")
     (label :class "separator" :text "|")
     (label :class "stat ram" :text "RAM ${ram_usage}%")
@@ -42,25 +42,14 @@
     (label :class "separator" :text "|")
     (label :class "stat net" :text "↓${net_down} ↑${net_up}")
     (label :class "separator" :text "|")
-    ;; WiFi
     (label :class "stat wifi" :text "📶 ${wifi_ssid}")
     (label :class "separator" :text "|")
-    ;; Settings buttons
-    (button :class "ctrl-btn"
-            :onclick "nm-connection-editor &"
-      "🌐")
-    (button :class "ctrl-btn"
-            :onclick "brightnessctl set 10%- &"
-      "🔅")
-    (button :class "ctrl-btn"
-            :onclick "brightnessctl set 10%+ &"
-      "🔆")))
+    (button :class "ctrl-btn" :onclick "nm-connection-editor &" "🌐")
+    (button :class "ctrl-btn" :onclick "brightnessctl set 10%- &" "🔅")
+    (button :class "ctrl-btn" :onclick "brightnessctl set 10%+ &" "🔆")))
 
-;; ===== CENTER ISLAND - Sliding Workspace Switcher =====
+;; ===== CENTER - Invisible trigger strip =====
 
-(defvar center_hovered false)
-
-;; Invisible trigger strip at top edge
 (defwindow center-trigger
   :monitor 0
   :geometry (geometry :x "50%"
@@ -77,7 +66,8 @@
     :onhoverlost "eww update center_hovered=false"
     (box)))
 
-;; Actual bar - slides down on hover
+;; ===== CENTER - Workspace bar slides down on hover =====
+
 (defwindow center-bar
   :monitor 0
   :geometry (geometry :x "50%"
@@ -105,18 +95,6 @@
               :onclick "xdotool set_desktop 2" "3")
       (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
               :onclick "xdotool set_desktop 3" "4"))))
-      (box :class "island center-island"
-           :orientation "h"
-           :space-evenly true
-           :spacing 6
-        (button :class "ws-btn ${workspace == '0' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 0" "1")
-        (button :class "ws-btn ${workspace == '1' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 1" "2")
-        (button :class "ws-btn ${workspace == '2' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 2" "3")
-        (button :class "ws-btn ${workspace == '3' ? 'active' : ''}"
-                :onclick "xdotool set_desktop 3" "4")))))
 
 ;; ===== RIGHT ISLAND - Media & Volume =====
 
@@ -135,25 +113,17 @@
        :orientation "h"
        :space-evenly false
        :spacing 8
-    ;; Media info
     (label :class "media-title"
            :text "${media_status == 'Playing' ? '♪ ${media_title}' : '—'}")
     (label :class "separator" :text "|")
-    ;; Playback controls
     (button :class "media-btn" :onclick "playerctl previous" "⏮")
     (button :class "media-btn play"
             :onclick "playerctl play-pause"
       "${media_status == 'Playing' ? '⏸' : '▶'}")
     (button :class "media-btn" :onclick "playerctl next" "⏭")
     (label :class "separator" :text "|")
-    ;; Volume
-    (button :class "ctrl-btn"
-            :onclick "pactl set-sink-volume @DEFAULT_SINK@ -5%"
-      "🔉")
+    (button :class "ctrl-btn" :onclick "pactl set-sink-volume @DEFAULT_SINK@ -5%" "🔉")
     (label :class "stat" :text "${muted == '1' ? '🔇' : '🔊'} ${volume}%")
-    (button :class "ctrl-btn"
-            :onclick "pactl set-sink-volume @DEFAULT_SINK@ +5%"
-      "🔊")
-    (button :class "ctrl-btn"
-            :onclick "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    (button :class "ctrl-btn" :onclick "pactl set-sink-volume @DEFAULT_SINK@ +5%" "🔊")
+    (button :class "ctrl-btn" :onclick "pactl set-sink-mute @DEFAULT_SINK@ toggle"
       "${muted == '1' ? '🔇' : '🔈'}")))

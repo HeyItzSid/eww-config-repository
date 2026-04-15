@@ -21,52 +21,18 @@
 .center-island { border-bottom: 3px solid #00bfff; }
 .right-island { border-right: 3px solid #00bfff; }
 
-// ===== STATS =====
-
-.stat {
-  color: #00bfff;
-  font-size: 11px;
-  padding: 2px 0;
-}
-
-.cpu   { color: #00bfff; }
-.ram   { color: #00ff88; }
-.temp  { color: #ff8800; }
-.net   { color: #8888ff; }
-.wifi  { color: #00ff88; }
-
-.ram-bar {
-  block {
-    background: #00ff88;
-    border-radius: 4px;
-    min-height: 6px;
-    min-width: 4px;
-  }
-  trough {
-    background: rgba(0, 255, 136, 0.15);
-    border-radius: 4px;
-    min-height: 6px;
-  }
-}
+// ===== BRIGHTNESS POPUP =====
 
 .bright-popup {
   border-top: 3px solid #ffcc00;
-  transition: opacity 200ms;
-
-  &.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  &.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
 }
+
+.bp-hidden { opacity: 0; pointer-events: none; }
+.bp-visible { opacity: 1; pointer-events: all; }
 
 .bright-bar {
   trough {
-    background: rgba(255, 204, 0, 0.15);
+    background: rgba(255, 204, 0, 0.2);
     border-radius: 4px;
     min-height: 6px;
   }
@@ -84,18 +50,23 @@
   }
 }
 
+// ===== STATS =====
+
+.stat {
+  color: #00bfff;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.cpu   { color: #00bfff; }
+.ram   { color: #00ff88; }
+.temp  { color: #ff8800; }
+.net   { color: #8888ff; }
+.wifi  { color: #00ff88; }
+
 .separator {
   color: rgba(0, 191, 255, 0.3);
   font-size: 10px;
-}
-
-// ===== CLOCK =====
-
-.clock {
-  color: #00bfff;
-  font-size: 15px;
-  font-weight: bold;
-  padding: 0 4px;
 }
 
 // ===== WORKSPACE BUTTONS =====

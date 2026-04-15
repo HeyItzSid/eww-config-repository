@@ -6,7 +6,6 @@
 (defpoll ram_usage    :interval "2s" "free -m | awk 'NR==2{printf \"%.0f\", $3*100/$2}'")
 (defpoll cpu_temp     :interval "2s" "sensors 2>/dev/null | grep 'Core 0' | awk '{print $3}' | tr -d '+°C' | head -1 || echo 'N/A'")
 (defpoll net_down     :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $2/1024/1024}'")
-(defpoll net_up       :interval "2s" "cat /proc/net/dev | grep -E 'eth0|ens|enp|wlan|wlp' | head -1 | awk '{printf \"%.1f\", $10/1024/1024}'")
 (defpoll wifi_ssid    :interval "5s" "iwgetid -r 2>/dev/null || echo 'No WiFi'")
 (defpoll volume       :interval "1s" "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\\d+(?=%)' | head -1 || echo '0'")
 (defpoll muted        :interval "1s" "pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -c 'yes' || echo '0'")
@@ -23,7 +22,7 @@
   :monitor 0
   :geometry (geometry :x "5px"
                       :y "5px"
-                      :width "380px"
+                      :width "340px"
                       :height "30px"
                       :anchor "top left")
   :stacking "bottom"
@@ -36,14 +35,7 @@
        :spacing 8
     (label :class "stat cpu" :text "CPU ${cpu_usage}%")
     (label :class "separator" :text "|")
-    (box :class "ram-container" :orientation "h" :spacing 4
-      (label :class "stat ram" :text "RAM")
-      (levelbar :class "ram-bar"
-                :value {ram_usage}
-                :min 0
-                :max 100
-                :width 50)
-      (label :class "stat ram" :text "${ram_usage}%"))
+    (label :class "stat ram" :text "RAM ${ram_usage}%")
     (label :class "separator" :text "|")
     (label :class "stat temp" :text "🌡${cpu_temp}")
     (label :class "separator" :text "|")
@@ -69,7 +61,7 @@
   :exclusive false
   :focusable false
   :windowtype "normal"
-  (box :class "island bright-popup ${bright_open ? 'visible' : 'hidden'}"
+  (box :class "island bright-popup ${bright_open ? 'bp-visible' : 'bp-hidden'}"
        :orientation "h"
        :spacing 8
     (label :class "stat" :text "🔅")
@@ -78,7 +70,7 @@
            :min 0
            :max 100
            :width 130
-           :onchange "brightnessctl set {}% 2>/dev/null || xrandr --output $(xrandr | grep ' connected' | head -1 | awk '{print $1}') --brightness $(echo 'scale=2; {}/100' | bc) &")
+           :onchange "brightnessctl set {}% 2>/dev/null || true")
     (label :class "stat" :text "${brightness}%")
     (label :class "stat" :text "🔆")))
 
@@ -114,7 +106,7 @@
   :monitor 0
   :geometry (geometry :x "5px"
                       :y "5px"
-                      :width "380px"
+                      :width "340px"
                       :height "30px"
                       :anchor "top right")
   :stacking "bottom"

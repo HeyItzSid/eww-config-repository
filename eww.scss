@@ -35,6 +35,20 @@
 .net   { color: #8888ff; }
 .wifi  { color: #00ff88; }
 
+.ram-bar {
+  trough {
+    background: rgba(0, 255, 136, 0.15);
+    border-radius: 4px;
+    min-height: 4px;
+  }
+  highlight {
+    background: #00ff88;
+    border-radius: 4px;
+    min-height: 4px;
+  }
+  slider { min-width: 0; min-height: 0; }
+}
+
 .separator {
   color: rgba(0, 191, 255, 0.3);
   font-size: 10px;

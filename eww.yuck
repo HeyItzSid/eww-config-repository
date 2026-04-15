@@ -34,7 +34,16 @@
        :spacing 10
     (label :class "stat cpu" :text "CPU ${cpu_usage}%")
     (label :class "separator" :text "|")
-    (label :class "stat ram" :text "RAM ${ram_usage}%")
+    ;; RAM with progress bar
+    (box :class "ram-container" :orientation "h" :spacing 4
+      (label :class "stat ram" :text "RAM")
+      (scale :class "ram-bar"
+             :value {ram_usage}
+             :min 0
+             :max 100
+             :width 60
+             :active false)
+      (label :class "stat ram" :text "${ram_usage}%"))
     (label :class "separator" :text "|")
     (label :class "stat temp" :text "🌡${cpu_temp}")
     (label :class "separator" :text "|")
@@ -42,7 +51,7 @@
     (label :class "separator" :text "|")
     (label :class "stat wifi" :text "📶 ${wifi_ssid}")
     (label :class "separator" :text "|")
-    (button :class "ctrl-btn" :onclick "nm-connection-editor &" "🌐")
+    (button :class "ctrl-btn" :onclick "kitty --title 'WiFi' -e bash -c 'nmcli device wifi list && echo && read -p \"Connect to: \" ssid && nmcli device wifi connect \"$ssid\"' &" "📶")
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%- &" "🔅")
     (button :class "ctrl-btn" :onclick "brightnessctl set 10%+ &" "🔆")))
 

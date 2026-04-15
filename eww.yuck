@@ -23,7 +23,7 @@
   :monitor 0
   :geometry (geometry :x "5px"
                       :y "5px"
-                      :width "460px"
+                      :width "380px"
                       :height "30px"
                       :anchor "top left")
   :stacking "bottom"
@@ -33,34 +33,29 @@
   (box :class "island left-island"
        :orientation "h"
        :space-evenly false
-       :spacing 10
+       :spacing 8
     (label :class "stat cpu" :text "CPU ${cpu_usage}%")
     (label :class "separator" :text "|")
-    ;; RAM with progress bar
     (box :class "ram-container" :orientation "h" :spacing 4
       (label :class "stat ram" :text "RAM")
       (scale :class "ram-bar"
              :value {ram_usage}
              :min 0
              :max 100
-             :width 60
+             :width 50
              :active false)
       (label :class "stat ram" :text "${ram_usage}%"))
     (label :class "separator" :text "|")
     (label :class "stat temp" :text "🌡${cpu_temp}")
     (label :class "separator" :text "|")
-    (label :class "stat net" :text "↓${net_down} ↑${net_up}")
-    (label :class "separator" :text "|")
-    (label :class "stat wifi" :text "📶 ${wifi_ssid}")
+    (label :class "stat net" :text "↓${net_down}")
     (label :class "separator" :text "|")
     (button :class "ctrl-btn"
             :onclick "kitty --title 'WiFi' -e bash -c 'nmcli device wifi list && echo && read -p \"Connect to: \" ssid && nmcli device wifi connect \"$ssid\"' &"
       "📶")
-    (label :class "separator" :text "|")
-    ;; Single brightness button
     (button :class "ctrl-btn"
             :onclick "eww update bright_open=${!bright_open}"
-      "☀ ${brightness}%")))
+      "☀")))
 
 ;; ===== BRIGHTNESS DROPDOWN =====
 
@@ -68,28 +63,25 @@
   :monitor 0
   :geometry (geometry :x "5px"
                       :y "40px"
-                      :width "200px"
-                      :height "60px"
+                      :width "220px"
+                      :height "50px"
                       :anchor "top left")
   :stacking "fg"
   :exclusive false
   :focusable false
   :windowtype "normal"
-  (revealer
-    :transition "slidedown"
-    :reveal bright_open
-    :duration "200ms"
-    (box :class "island bright-popup"
-         :orientation "h"
-         :spacing 8
-      (label :class "stat" :text "🔅")
-      (scale :class "bright-bar"
-             :value {brightness}
-             :min 0
-             :max 100
-             :width 120
-             :onchange "brightnessctl set {}% &")
-      (label :class "stat" :text "🔆"))))
+  (box :class "island bright-popup ${bright_open ? 'visible' : 'hidden'}"
+       :orientation "h"
+       :spacing 8
+    (label :class "stat" :text "🔅")
+    (scale :class "bright-bar"
+           :value {brightness}
+           :min 0
+           :max 100
+           :width 130
+           :onchange "brightnessctl set {}% 2>/dev/null || xrandr --output $(xrandr | grep ' connected' | head -1 | awk '{print $1}') --brightness $(echo 'scale=2; {}/100' | bc) &")
+    (label :class "stat" :text "${brightness}%")
+    (label :class "stat" :text "🔆")))
 
 ;; ===== CENTER - Workspace bar =====
 

@@ -46,7 +46,13 @@
     border-radius: 4px;
     min-height: 4px;
   }
-  slider { min-width: 0; min-height: 0; }
+  slider {
+    min-width: 0;
+    min-height: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
 }
 
 .bright-popup {

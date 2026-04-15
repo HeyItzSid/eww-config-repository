@@ -38,12 +38,11 @@
     (label :class "separator" :text "|")
     (box :class "ram-container" :orientation "h" :spacing 4
       (label :class "stat ram" :text "RAM")
-      (scale :class "ram-bar"
-             :value {ram_usage}
-             :min 0
-             :max 100
-             :width 50
-             :active false)
+      (levelbar :class "ram-bar"
+                :value {ram_usage}
+                :min 0
+                :max 100
+                :width 50)
       (label :class "stat ram" :text "${ram_usage}%"))
     (label :class "separator" :text "|")
     (label :class "stat temp" :text "🌡${cpu_temp}")
@@ -87,11 +86,11 @@
 
 (defwindow center-bar
   :monitor 0
-  :geometry (geometry :x "390px"
+  :geometry (geometry :x "50%"
                       :y "5px"
                       :width "160px"
                       :height "30px"
-                      :anchor "top left")
+                      :anchor "top center")
   :stacking "bottom"
   :exclusive false
   :focusable false

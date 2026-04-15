@@ -59,7 +59,7 @@
 
 (defwindow center-bar
   :monitor 0
-  :geometry (geometry :x "50%"
+  :geometry (geometry :x "58%"
                       :y "5px"
                       :width "220px"
                       :height "30px"

@@ -13,7 +13,9 @@
 (defpoll media_title  :interval "2s" "playerctl metadata title 2>/dev/null | head -c 25 || echo 'No media'")
 (defpoll media_status :interval "1s" "playerctl status 2>/dev/null || echo 'Stopped'")
 (defpoll workspace    :interval "1s" "xdotool get_desktop 2>/dev/null || echo '0'")
-(defpoll brightness   :interval "2s" "brightnessctl get 2>/dev/null | awk -v max=$(brightnessctl max 2>/dev/null) '{printf \"%.0f\", $1*100/max}' || echo '100'")
+(defpoll brightness   :interval "1s" "brightnessctl get 2>/dev/null | awk -v max=$(brightnessctl max 2>/dev/null) '{printf \"%.0f\", $1*100/max}' || echo '100'")
+
+(defvar bright_open false)
 
 ;; ===== LEFT ISLAND - Stats & Controls =====
 
@@ -21,7 +23,7 @@
   :monitor 0
   :geometry (geometry :x "5px"
                       :y "5px"
-                      :width "420px"
+                      :width "460px"
                       :height "30px"
                       :anchor "top left")
   :stacking "bottom"
@@ -51,15 +53,49 @@
     (label :class "separator" :text "|")
     (label :class "stat wifi" :text "📶 ${wifi_ssid}")
     (label :class "separator" :text "|")
-    (button :class "ctrl-btn" :onclick "kitty --title 'WiFi' -e bash -c 'nmcli device wifi list && echo && read -p \"Connect to: \" ssid && nmcli device wifi connect \"$ssid\"' &" "📶")
-    (button :class "ctrl-btn" :onclick "brightnessctl set 10%- &" "🔅")
-    (button :class "ctrl-btn" :onclick "brightnessctl set 10%+ &" "🔆")))
+    (button :class "ctrl-btn"
+            :onclick "kitty --title 'WiFi' -e bash -c 'nmcli device wifi list && echo && read -p \"Connect to: \" ssid && nmcli device wifi connect \"$ssid\"' &"
+      "📶")
+    (label :class "separator" :text "|")
+    ;; Single brightness button
+    (button :class "ctrl-btn"
+            :onclick "eww update bright_open=${!bright_open}"
+      "☀ ${brightness}%")))
+
+;; ===== BRIGHTNESS DROPDOWN =====
+
+(defwindow brightness-popup
+  :monitor 0
+  :geometry (geometry :x "5px"
+                      :y "40px"
+                      :width "200px"
+                      :height "60px"
+                      :anchor "top left")
+  :stacking "fg"
+  :exclusive false
+  :focusable false
+  :windowtype "normal"
+  (revealer
+    :transition "slidedown"
+    :reveal bright_open
+    :duration "200ms"
+    (box :class "island bright-popup"
+         :orientation "h"
+         :spacing 8
+      (label :class "stat" :text "🔅")
+      (scale :class "bright-bar"
+             :value {brightness}
+             :min 0
+             :max 100
+             :width 120
+             :onchange "brightnessctl set {}% &")
+      (label :class "stat" :text "🔆"))))
 
 ;; ===== CENTER - Workspace bar =====
 
 (defwindow center-bar
   :monitor 0
-  :geometry (geometry :x "58%"
+  :geometry (geometry :x "50%"
                       :y "5px"
                       :width "220px"
                       :height "30px"
